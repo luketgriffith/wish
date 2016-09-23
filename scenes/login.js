@@ -8,6 +8,9 @@ var t = require('tcomb-form-native');
 import base from '../config';
 import Home from './home';
 import Welcome from './welcome';
+import Friends from './friends';
+import List from './list';
+
 var ScrollableTabView = require('react-native-scrollable-tab-view');
 
 
@@ -141,6 +144,8 @@ class Login extends Component {
         <ScrollableTabView>
           <Welcome tabLabel="Welcome" />
           <Home tabLabel="Camera" />
+          <Friends tabLabel="Friends" />
+          <List tabLabel="List" />
         </ScrollableTabView>
       )
     }
