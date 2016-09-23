@@ -10,6 +10,7 @@ import Home from './home';
 import Welcome from './welcome';
 import Friends from './friends';
 import List from './list';
+import SignUp from './signUp';
 
 var ScrollableTabView = require('react-native-scrollable-tab-view');
 
@@ -27,9 +28,10 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      auth: false
+      auth: false,
+      signUp: false
     }
-
+    this.toggleSignUp = this.toggleSignUp.bind(this)
     this.onPress = this.onPress.bind(this);
   }
 
@@ -53,11 +55,6 @@ class Login extends Component {
 
   }
 
-  static propTypes = {
-    navigator: PropTypes.object.isRequired,
-  }
-
-
 
   onPress() {
     // call getValue() to get the values of the form
@@ -74,20 +71,32 @@ class Login extends Component {
         console.log('the data...', data)
         //set a cookie or something
         if(data) {
-          this.props.navigator.push({
-            component: Home,
-            title: '',
-            passProps: {
-              user: data
-            },
+          // this.props.navigator.push({
+          //   component: Home,
+          //   title: '',
+          //   passProps: {
+          //     user: data
+          //   },
+          // });
+          this.setState({
+            auth: true
           });
         }
       })
     }
   }
 
+  toggleSignUp() {
+    console.log('sdsdfsdfsadf');
+
+    this.setState({
+      signUp: true
+    })
+  }
+
   render() {
     let login;
+
 
     var styles = StyleSheet.create({
       container: {
@@ -126,7 +135,7 @@ class Login extends Component {
       }
     }
 
-    if(this.state.auth) {
+    if(!this.state.auth) {
       login = (
           <View style={styles.container}>
             <Form
@@ -137,6 +146,8 @@ class Login extends Component {
             <TouchableHighlight style={styles.button} onPress={this.onPress} underlayColor='#99d9f4'>
               <Text style={styles.buttonText}>Login</Text>
             </TouchableHighlight>
+            <Text onPress={this.toggleSignUp}>Or Sign Up!</Text>
+            <SignUp/>
           </View>
         )
     } else {
