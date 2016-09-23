@@ -2,10 +2,15 @@
 'use strict';
 
 import React, { Component, PropTypes } from 'react'
-import { View, TouchableHighlight, StyleSheet, Text } from 'react-native';
+import { View, TouchableHighlight, StyleSheet, Text, PanResponder } from 'react-native';
+import SimpleGesture from 'react-native-simple-gesture';
 var t = require('tcomb-form-native');
 import base from '../config';
 import Home from './home';
+import Welcome from './welcome';
+var ScrollableTabView = require('react-native-scrollable-tab-view');
+
+
 
 var Form = t.form.Form;
 
@@ -18,13 +23,38 @@ var User = t.struct({
 class Login extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      auth: false
+    }
 
     this.onPress = this.onPress.bind(this);
+  }
+
+
+
+  componentWillMount() {
+
+    base.auth().onAuthStateChanged(function(user) {
+
+      if (user) {
+        console.log('wheeee user')
+        // User is signed in.
+        this.setState({
+          auth: true
+        })
+
+      } else {
+        // No user is signed in.
+      }
+    });
+
   }
 
   static propTypes = {
     navigator: PropTypes.object.isRequired,
   }
+
+
 
   onPress() {
     // call getValue() to get the values of the form
@@ -34,8 +64,11 @@ class Login extends Component {
       base.auth().signInWithEmailAndPassword(value.email, value.password).catch(function(error) {
         var errorCode = error.code;
         var errorMessage = error.message;
-
+        if(errorMessage){
+          console.log(errorMessage)
+        }
       }).then((data) => {
+        console.log('the data...', data)
         //set a cookie or something
         if(data) {
           this.props.navigator.push({
@@ -51,6 +84,8 @@ class Login extends Component {
   }
 
   render() {
+    let login;
+
     var styles = StyleSheet.create({
       container: {
         justifyContent: 'center',
@@ -79,6 +114,7 @@ class Login extends Component {
         justifyContent: 'center'
       }
     });
+
     let options = {
           fields: {
             password: {
@@ -86,17 +122,33 @@ class Login extends Component {
             }
       }
     }
+
+    if(this.state.auth) {
+      login = (
+          <View style={styles.container}>
+            <Form
+              ref="form"
+              type={User}
+              options={options}
+            />
+            <TouchableHighlight style={styles.button} onPress={this.onPress} underlayColor='#99d9f4'>
+              <Text style={styles.buttonText}>Login</Text>
+            </TouchableHighlight>
+          </View>
+        )
+    } else {
+      login = (
+        <ScrollableTabView>
+          <Welcome tabLabel="Welcome" />
+          <Home tabLabel="Camera" />
+        </ScrollableTabView>
+      )
+    }
+
     return (
-      <View style={styles.container}>
-        <Form
-          ref="form"
-          type={User}
-          options={options}
-        />
-        <TouchableHighlight style={styles.button} onPress={this.onPress} underlayColor='#99d9f4'>
-          <Text style={styles.buttonText}>Save</Text>
-        </TouchableHighlight>
-      </View>
+
+        login
+
     );
   }
 }
