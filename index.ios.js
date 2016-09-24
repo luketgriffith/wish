@@ -15,7 +15,17 @@ class wishlist extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Login />
+      <NavigatorIOS
+        navigationBarHidden={true}
+        initialRoute={{
+          component: Login,
+          title: 'Login or Sign Up!',
+        }}
+        style={{ 'flex': 1 }}
+        barTintColor='#ed1c40'
+        titleTextColor='white'
+        tintColor='white'
+      />
       </View>
     );
   }
