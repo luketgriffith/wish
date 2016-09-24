@@ -1,10 +1,11 @@
 'use strict';
 
 import React, { Component, PropTypes } from 'react'
-import { View, TouchableHighlight, StyleSheet, Text, PanResponder, ListView } from 'react-native';
+import { View, TouchableHighlight, StyleSheet, Text, PanResponder, ListView, AlertIOS } from 'react-native';
 import styles from './styles';
 import base from '../config';
 import ListItem from './listItem';
+import SingleItem from './singleItem';
 
 class List extends Component {
   constructor(props) {
@@ -18,11 +19,14 @@ class List extends Component {
 
     this.addItem = this.addItem.bind(this);
     this.renderItem = this.renderItem.bind(this);
+    this.submitItem = this.submitItem.bind(this);
+    this.cancelButton = this.cancelButton.bind(this);
+    this.onPress = this.onPress.bind(this);
   }
 
   static propTypes = {
-    user: PropTypes.object.isRequired
-    // navigator: PropTypes.object.isRequired
+    user: PropTypes.object.isRequired,
+    navigator: PropTypes.object.isRequired
   }
 
   componentWillMount() {
@@ -30,7 +34,6 @@ class List extends Component {
   }
 
   componentDidMount() {
-    console.log('mr props...', this.props)
     base.listenTo('users/' + this.props.user.uid + '/items', {
       context: this,
       asArray: true,
@@ -45,6 +48,34 @@ class List extends Component {
     })
   }
 
+  onPress(item) {
+    console.log('touched it: ', item)
+    this.props.navigator.push({
+      component: SingleItem,
+      title: '',
+      passProps: {
+        user: this.props.user,
+        item: item
+      }
+    })
+  }
+
+  submitItem(text) {
+    console.log('the text: ', text)
+    base.push('users/' + this.props.user.uid + '/items', {
+      data: { name: text },
+      then(err) {
+        if(!err) {
+
+        }
+      }
+    })
+  }
+
+  cancelButton() {
+
+  }
+
   addItem() {
   AlertIOS.prompt(
     'Add New Item',
@@ -56,7 +87,7 @@ class List extends Component {
       },
       {
         text: 'Add',
-        onPress: (text) => this.addWidget(text)
+        onPress: (text) => this.submitItem(text)
       },
     ],
     'plain-text'
@@ -64,32 +95,31 @@ class List extends Component {
 }
 
 renderItem(item) {
-  console.log('wssdfadf', item)
-  const onPress = () => {
-    AlertIOS.alert(
-      'Complete',
-      null,
-      [
-        {text: 'Complete', onPress: () => this.complete(item)},
-        {text: 'Cancel', onPress: (text) => console.log('Cancelled')}
-      ]
-    );
-  };
+  // const onPress = () => {
+  //   AlertIOS.alert(
+  //     'Complete',
+  //     null,
+  //     [
+  //       {text: 'Complete', onPress: () => this.complete(item)},
+  //       {text: 'Cancel', onPress: (text) => console.log('Cancelled')}
+  //     ]
+  //   );
+  // };
 
   return (
-    <ListItem item={item} onPress={onPress} />
+    <ListItem item={item} onPress={() => this.onPress(item)} />
   );
 }
 
   render() {
     return (
       <View>
-        <Text>List go here</Text>
         <ListView
           dataSource={this.state.items}
           renderRow={this.renderItem}
           enableEmptySections={true}
           style={styles.listview}/>
+        <Text onPress={this.addItem}>Add Item</Text>
       </View>
     )
   }

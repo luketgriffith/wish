@@ -11,6 +11,10 @@ import styles from './styles';
 var ScrollableTabView = require('react-native-scrollable-tab-view');
 
 class Welcome extends Component {
+  static propTypes = {
+    navigator: PropTypes.object.isRequired,
+  }
+
   render() {
     const styles = StyleSheet.create({
       container: {
@@ -24,7 +28,7 @@ class Welcome extends Component {
       <ScrollableTabView>
         <Home tabLabel="Camera" user={this.props.user}/>
         <Friends tabLabel="Friends" user={this.props.user}/>
-        <List tabLabel="List" user={this.props.user}/>
+        <List tabLabel="List" user={this.props.user} navigator={this.props.navigator}/>
       </ScrollableTabView>
     )
   }
