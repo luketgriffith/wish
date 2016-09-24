@@ -11,6 +11,7 @@ import {
 var t = require('tcomb-form-native');
 import base from '../config';
 import Camera from 'react-native-camera';
+var RNUploader = require('NativeModules').RNUploader;
 
 class Home extends Component {
 
@@ -52,7 +53,17 @@ class Home extends Component {
 
   takePicture() {
     this.camera.capture()
-      .then((data) => console.log(data))
+      .then((data) => {
+        let ref = base.storage().ref();
+        // let file = new File(data.path);
+        let imgRef = ref.child('images/' + this.props.user.uid)
+        imgRef.putString(data.path).then((snapshot) => {
+          console.log('uploaded!')
+        }).catch(function(error) {
+          console.log('errrrrrrrr:', error)
+        })
+        // console.log(data)
+      })
       .catch(err => console.error(err));
   }
 }
