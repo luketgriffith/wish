@@ -40,7 +40,7 @@ class Login extends Component {
   componentWillMount() {
     base.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log('wheeee user')
+        console.log('wheeee user', user)
         // User is signed in.
         this.props.navigator.push({
           component: Welcome,

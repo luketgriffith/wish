@@ -22,9 +22,9 @@ class Welcome extends Component {
     })
     return (
       <ScrollableTabView>
-        <Home tabLabel="Camera" />
-        <Friends tabLabel="Friends" />
-        <List tabLabel="List" />
+        <Home tabLabel="Camera" user={this.props.user}/>
+        <Friends tabLabel="Friends" user={this.props.user}/>
+        <List tabLabel="List" user={this.props.user}/>
       </ScrollableTabView>
     )
   }

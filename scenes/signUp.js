@@ -6,6 +6,7 @@ import SimpleGesture from 'react-native-simple-gesture';
 var t = require('tcomb-form-native');
 import styles from './styles';
 import base from '../config';
+import Welcome from './welcome';
 
 var Form = t.form.Form;
 
@@ -28,7 +29,45 @@ class SignUp extends Component {
   }
 
   onPress() {
-    console.log('wat')
+    let navigate = (user) => {
+      this.props.navigator.push({
+        component: Welcome,
+        title: '',
+        passProps: {
+          user: user
+        }
+      });
+    }
+
+    var value = this.refs.form.getValue();
+    base.auth().createUserWithEmailAndPassword(value.email, value.password).catch(function(error) {
+
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      if(error){
+        AlertIOS.alert(error.message);
+      }
+    }).then(function(user) {
+      if(!user) {
+        return;
+      } else {
+        user.updateProfile({
+          displayName: value.userName
+        });
+
+        base.post('users/' + user.uid, {
+          data: {
+            uid: user.uid
+           },
+          then(err) {
+            if(!err) {
+              navigate(user);
+            }
+          }
+        })
+
+      }
+    })
   }
 
   render() {
