@@ -6,6 +6,7 @@ import styles from './styles';
 import base from '../config';
 import ListItem from './listItem';
 import SingleItem from './singleItem';
+import fetch from 'isomorphic-fetch';
 
 class List extends Component {
   constructor(props) {
@@ -30,22 +31,33 @@ class List extends Component {
   }
 
   componentWillMount() {
-
+    fetch('http://localhost:3333/items')
+        .then((response) => {
+          if (response.status >= 400) {
+              throw new Error("Bad response from server");
+          }
+          return response.json();
+      })
+      .then((stories) => {
+          this.setState({
+              items: this.state.items.cloneWithRows(stories)
+          });
+      });
   }
 
   componentDidMount() {
-    base.listenTo('users/' + this.props.user.uid + '/items', {
-      context: this,
-      asArray: true,
-      then(data) {
-        console.log('list data...', data)
-        if(data) {
-          this.setState({
-            items: this.state.items.cloneWithRows(data)
-          });
-        }
-      }
-    })
+    // base.listenTo('users/' + this.props.user.uid + '/items', {
+    //   context: this,
+    //   asArray: true,
+    //   then(data) {
+    //     console.log('list data...', data)
+    //     if(data) {
+    //       this.setState({
+    //         items: this.state.items.cloneWithRows(data)
+    //       });
+    //     }
+    //   }
+    // })
   }
 
   onPress(item) {
@@ -62,14 +74,14 @@ class List extends Component {
 
   submitItem(text) {
     console.log('the text: ', text)
-    base.push('users/' + this.props.user.uid + '/items', {
-      data: { name: text },
-      then(err) {
-        if(!err) {
-
-        }
-      }
-    })
+    // base.push('users/' + this.props.user.uid + '/items', {
+    //   data: { name: text },
+    //   then(err) {
+    //     if(!err) {
+    //
+    //     }
+    //   }
+    // })
   }
 
   cancelButton() {
