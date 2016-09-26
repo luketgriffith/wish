@@ -8,6 +8,12 @@ class ItemsController {
     const items = yield Item.all()
     yield response.ok(items)
   }
+
+  * add (request, response) {
+    let data = request.all();
+    yield Item.create(data);
+    yield response.status(200).json({ success: true })
+  }
 }
 
 module.exports = ItemsController

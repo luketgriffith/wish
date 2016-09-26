@@ -7,6 +7,7 @@ import base from '../config';
 import ListItem from './listItem';
 import SingleItem from './singleItem';
 import fetch from 'isomorphic-fetch';
+import superagent from 'superagent';
 
 class List extends Component {
   constructor(props) {
@@ -45,20 +46,6 @@ class List extends Component {
       });
   }
 
-  componentDidMount() {
-    // base.listenTo('users/' + this.props.user.uid + '/items', {
-    //   context: this,
-    //   asArray: true,
-    //   then(data) {
-    //     console.log('list data...', data)
-    //     if(data) {
-    //       this.setState({
-    //         items: this.state.items.cloneWithRows(data)
-    //       });
-    //     }
-    //   }
-    // })
-  }
 
   onPress(item) {
     console.log('touched it: ', item)
@@ -74,6 +61,19 @@ class List extends Component {
 
   submitItem(text) {
     console.log('the text: ', text)
+    let data = {
+      name: text,
+      user: this.props.user.uid
+    }
+    superagent
+      .post('http://localhost:3333/items')
+      .send(data)
+      .end((err, res) => {
+        if(err) {
+          console.log(err);
+        }
+        console.log(res.body)
+      })
     // base.push('users/' + this.props.user.uid + '/items', {
     //   data: { name: text },
     //   then(err) {

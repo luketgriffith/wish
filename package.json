@@ -18,6 +18,7 @@
     "react-native-scrollable-tab-view": "^0.6.0",
     "react-native-simple-gesture": "0.0.2",
     "react-native-uploader": "0.0.9",
+    "superagent": "^2.3.0",
     "tcomb-form-native": "^0.6.1"
   }
 }
