@@ -9,9 +9,12 @@ import {
   Dimensions
  } from 'react-native';
 var t = require('tcomb-form-native');
+// import ReadImageData from 'react-native-asset-library-to-base64';
 import base from '../config';
 import Camera from 'react-native-camera';
 var RNUploader = require('NativeModules').RNUploader;
+var ReadImageData = require('NativeModules').ReadImageData;
+
 
 class Home extends Component {
 
@@ -52,19 +55,25 @@ class Home extends Component {
   }
 
   takePicture() {
-    this.camera.capture()
-      .then((data) => {
-        let ref = base.storage().ref();
-        // let file = new File(data.path);
-        let imgRef = ref.child('images/' + this.props.user.uid)
-        imgRef.putString(data.path).then((snapshot) => {
-          console.log('uploaded!')
-        }).catch(function(error) {
-          console.log('errrrrrrrr:', error)
-        })
-        // console.log(data)
+    console.log('this.props.user.uid', this.props.user.uid);
+
+    this.camera.capture().catch((error) => {
+      console.log('errrrrrrrr:', error)
+    }).then((data) => {
+      let ref = base.storage().ref();
+      let imgRef = ref.child('images/' + this.props.user.uid)
+      var body = new FormData();
+      var photo = {
+        uri: data.path
+      }
+      body.append(photo);
+
+      imgRef.put(body).then((data) => {
+        console.log('uploaded?')
       })
-      .catch(err => console.error(err));
+      }).catch((err) => {
+        console.log('SHOOOOOOT ERROR: ', err)
+      })
   }
 }
 
