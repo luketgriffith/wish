@@ -18,7 +18,7 @@ class List extends Component {
         rowHasChanged: (row1, row2) => row1 !== row2,
       })
     };
-
+    this.fetchItems = this.fetchItems.bind(this);
     this.addItem = this.addItem.bind(this);
     this.renderItem = this.renderItem.bind(this);
     this.submitItem = this.submitItem.bind(this);
@@ -31,8 +31,8 @@ class List extends Component {
     navigator: PropTypes.object.isRequired
   }
 
-  componentWillMount() {
-    fetch('http://localhost:3333/items')
+  fetchItems() {
+    fetch('http://localhost:3333/items/' + this.props.user.uid)
         .then((response) => {
           if (response.status >= 400) {
               throw new Error("Bad response from server");
@@ -46,9 +46,13 @@ class List extends Component {
       });
   }
 
+  componentWillMount() {
+    this.fetchItems()
+  }
+
+
 
   onPress(item) {
-    console.log('touched it: ', item)
     this.props.navigator.push({
       component: SingleItem,
       title: '',
@@ -71,17 +75,11 @@ class List extends Component {
       .end((err, res) => {
         if(err) {
           console.log(err);
+        } else {
+          this.fetchItems();
         }
-        console.log(res.body)
+
       })
-    // base.push('users/' + this.props.user.uid + '/items', {
-    //   data: { name: text },
-    //   then(err) {
-    //     if(!err) {
-    //
-    //     }
-    //   }
-    // })
   }
 
   cancelButton() {
@@ -107,17 +105,6 @@ class List extends Component {
 }
 
 renderItem(item) {
-  // const onPress = () => {
-  //   AlertIOS.alert(
-  //     'Complete',
-  //     null,
-  //     [
-  //       {text: 'Complete', onPress: () => this.complete(item)},
-  //       {text: 'Cancel', onPress: (text) => console.log('Cancelled')}
-  //     ]
-  //   );
-  // };
-
   return (
     <ListItem item={item} onPress={() => this.onPress(item)} />
   );

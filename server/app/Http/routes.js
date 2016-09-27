@@ -16,5 +16,5 @@
 */
 
 const Route = use('Route')
-Route.get('/items', 'ItemsController.index')
+Route.get('/items/:id', 'ItemsController.index')
 Route.post('/items', 'ItemsController.add')
