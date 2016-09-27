@@ -12,8 +12,7 @@ var t = require('tcomb-form-native');
 // import ReadImageData from 'react-native-asset-library-to-base64';
 import base from '../config';
 import Camera from 'react-native-camera';
-var RNUploader = require('NativeModules').RNUploader;
-var ReadImageData = require('NativeModules').ReadImageData;
+import { RNS3 } from 'react-native-aws3';
 
 
 class Home extends Component {
@@ -60,17 +59,41 @@ class Home extends Component {
     this.camera.capture().catch((error) => {
       console.log('errrrrrrrr:', error)
     }).then((data) => {
-      let ref = base.storage().ref();
-      let imgRef = ref.child('images/' + this.props.user.uid)
-      var body = new FormData();
-      var photo = {
-        uri: data.path
-      }
-      body.append(photo);
+      console.log(data.path);
+      let file = {
+          uri: data.path,
+          name: "image.jpeg",
+          type: "image/jpeg"
+        }
 
-      imgRef.put(body).then((data) => {
-        console.log('uploaded?')
-      })
+        let options = {
+          keyPrefix: "images/",
+          bucket: "http://wishlistgriffith.s3.amazonaws.com",
+          region: "us-east-1",
+          accessKey: "AKIAJPEV2KHW4MHWXKLQ",
+          secretKey: "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",
+          successActionStatus: 201
+        }
+
+        RNS3.put(file, options).then(response => {
+          console.log('waasdfdsa')
+          if (response.status !== 201)
+            throw new Error("Failed to upload image to S3");
+          console.log(response.body);
+          /**
+           * {
+           *   postResponse: {
+           *     bucket: "your-bucket",
+           *     etag : "9f620878e06d28774406017480a59fd4",
+           *     key: "uploads/image.png",
+           *     location: "https://your-bucket.s3.amazonaws.com/uploads%2Fimage.png"
+           *   }
+           * }
+           */
+        }).catch((err) => {
+          console.log('errrrrr: ', err)
+        })
+
       }).catch((err) => {
         console.log('SHOOOOOOT ERROR: ', err)
       })
