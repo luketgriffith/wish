@@ -66,15 +66,7 @@ class Home extends Component {
           type: "image/jpeg"
         }
 
-        let options = {
-          keyPrefix: "images/",
-          bucket: "http://wishlistgriffith.s3.amazonaws.com",
-          region: "us-east-1",
-          accessKey: "AKIAJPEV2KHW4MHWXKLQ",
-          secretKey: "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",
-          successActionStatus: 201
-        }
-
+      
         RNS3.put(file, options).then(response => {
           console.log('waasdfdsa')
           if (response.status !== 201)
