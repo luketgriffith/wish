@@ -32,6 +32,15 @@ class UsersController {
     let addFriend = yield user.friends().save(newFriend);
     yield response.ok(addFriend);
   }
+
+
+  * getFriends (request, response) {
+    let id = request.param('id')
+    let user = yield User.findBy('uid', id);
+    let friends = yield user.friends().fetch();
+    yield response.ok(friends);
+  }
+
 }
 
 module.exports = UsersController
