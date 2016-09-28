@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component, PropTypes } from 'react'
-import { View, TouchableHighlight, TouchableOpacity, StyleSheet, Text, PanResponder, TextInput, ListView } from 'react-native';
+import { View, TouchableHighlight, TouchableOpacity, StyleSheet, Text, PanResponder, TextInput, ListView, Image } from 'react-native';
 import Welcome from './welcome';
 import superagent from 'superagent';
 import db from '../dbConfig';
@@ -10,7 +10,7 @@ class FindFriends extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: 'Search By Name',
+      text: '',
       friends: new ListView.DataSource({
           rowHasChanged: (row1, row2) => row1 !== row2,
       })
@@ -54,16 +54,23 @@ class FindFriends extends Component {
   }
 
   renderItem(item) {
+    console.log('got an item here: ', item)
     return (
-      <View>
-        <Text>{item.firstName}</Text>
+      <View style={{ backgroundColor: '#EEE', height: 80, padding: 5, flexDirection: 'row' }}>
+      <Image
+         style={{width: 50, height: 50, borderRadius: 5 }}
+         source={{uri: item.img_url }}
+       />
+       <View style={{ padding: 20 }}>
+          <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
+      </View>
       </View>
     );
   }
 
   render() {
     return (
-      <View>
+      <View style={{ paddingTop: 50 }}>
         <Text>Find Friends</Text>
         <TextInput
           style={{height: 40, borderColor: 'gray', borderWidth: 1}}
@@ -78,11 +85,14 @@ class FindFriends extends Component {
         <TouchableOpacity onPress={this.onPress}>
           <Text>Back</Text>
         </TouchableOpacity>
+        <View>
           <ListView
             dataSource={this.state.friends}
             renderRow={this.renderItem}
             enableEmptySections={true}
+            style={{ }}
           />
+        </View>
       </View>
     )
   }

@@ -8,7 +8,7 @@ class UsersController {
     // const items = yield Database.from('items').where('user', request.param('id'))
     let term = request.all();
     console.log('term: ', term)
-    const users = yield Database.from('users').where('firstName', term.term)
+    const users = yield Database.from('users').whereRaw('firstName LIKE ?', '%' + term.term + '%')
     yield response.ok(users);
   }
   * add (request, response) {
