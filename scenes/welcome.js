@@ -8,13 +8,38 @@ import Friends from './friends';
 import List from './list';
 import SignUp from './signUp';
 import styles from './styles';
+import superagent from 'superagent';
+import db from '../dbConfig';
 var ScrollableTabView = require('react-native-scrollable-tab-view');
 
 class Welcome extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      user: this.props.user
+    }
+
+  }
   static propTypes = {
     navigator: PropTypes.object.isRequired,
   }
-
+  componentWillMount() {
+    let user = { email: this.state.user.email };
+    superagent
+      .post(db.url + '/getUser')
+      .send(user)
+      .end((err, res) => {
+        if(err) {
+          console.log(err)
+        } else {
+          let newUser = res.body;
+          this.setState({
+            user: newUser
+          });
+        }
+      })
+  }
   render() {
     const styles = StyleSheet.create({
       container: {

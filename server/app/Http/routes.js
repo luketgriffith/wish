@@ -17,8 +17,10 @@
 
 const Route = use('Route')
 Route.get('/items/:id', 'ItemsController.index')
+Route.post('/getUser', 'UsersController.singeUser')
 Route.post('/items', 'ItemsController.add')
 Route.post('/users', 'UsersController.add')
 Route.post('/findFriends', 'UsersController.findFriends')
 Route.post('/addFriend', 'UsersController.addFriend')
 Route.get('/friends/:id', 'UsersController.getFriends')
+Route.post('/confirmFriend', 'UsersController.confirmFriend')

@@ -34,10 +34,13 @@ class FindFriends extends Component {
   }
 
   onSearch() {
-
+    console.log('props:', this.props.user)
     let data = {
-      term: this.state.text
+      term: this.state.text,
+      user: this.props.user.id
     };
+
+    console.log('the data...', data);
 
     superagent
       .post(db.url + '/findFriends')
