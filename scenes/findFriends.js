@@ -19,6 +19,7 @@ class FindFriends extends Component {
     this.onPress = this.onPress.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.renderItem = this.renderItem.bind(this);
+    this.addFriend = this.addFriend.bind(this);
   }
 
   onPress() {
@@ -53,17 +54,40 @@ class FindFriends extends Component {
       })
   }
 
+  addFriend(friend) {
+    console.log('the friend...', friend);
+    let data = {
+      user: this.props.user.uid,
+      friend: friend
+    }
+    superagent
+      .post(db.url + '/addFriend')
+      .send(data)
+      .end((err, res) => {
+        if(err) {
+          console.log('errr')
+        } else {
+          console.log(res.body)
+        }
+      })
+  }
+
   renderItem(item) {
-    console.log('got an item here: ', item)
     return (
       <View style={{ backgroundColor: '#EEE', height: 80, padding: 5, flexDirection: 'row' }}>
-      <Image
-         style={{width: 50, height: 50, borderRadius: 5 }}
-         source={{uri: item.img_url }}
-       />
-       <View style={{ padding: 20 }}>
-          <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
-      </View>
+        <Image
+           style={{width: 50, height: 50, borderRadius: 5 }}
+           source={{uri: item.img_url }}
+         />
+         <View style={{ padding: 20, width: 150 }}>
+            <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
+         </View>
+
+         <View style={{ backgroundColor: 'black', height: 40 }}>
+          <TouchableOpacity onPress={this.addFriend.bind(null, item)}>
+            <Text style={{ color: 'white' }}>Add Friend</Text>
+          </TouchableOpacity>
+         </View>
       </View>
     );
   }
