@@ -7,13 +7,16 @@ var t = require('tcomb-form-native');
 import styles from './styles';
 import base from '../config';
 import Welcome from './welcome';
+import db from '../dbConfig';
+import superagent from 'superagent';
 
 var Form = t.form.Form;
 
 var User = t.struct({
   email: t.String,              // a required string
   password: t.String,
-  userName: t.String
+  firstName: t.String,
+  lastName: t.String
 });
 
 class SignUp extends Component {
@@ -51,21 +54,25 @@ class SignUp extends Component {
       if(!user) {
         return;
       } else {
-        user.updateProfile({
-          displayName: value.userName
-        });
 
-        base.post('users/' + user.uid, {
-          data: {
-            uid: user.uid
-           },
-          then(err) {
-            if(!err) {
-              navigate(user);
+        let data = {
+          firstName: value.firstName,
+          lastName: value.lastName,
+          uid: user.uid,
+          email: value.email
+        }
+
+        superagent
+          .post(db.url + '/users')
+          .send(data)
+          .end((err, res) => {
+            if(err) {
+              console.log('error.....', err)
+              AlertIOS.alert('Error signing up', 'Make sure your email is valid.')
+            } else {
+              navigate(res.body)
             }
-          }
-        })
-
+          });
       }
     })
   }

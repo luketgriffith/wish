@@ -8,6 +8,7 @@ import ListItem from './listItem';
 import SingleItem from './singleItem';
 import fetch from 'isomorphic-fetch';
 import superagent from 'superagent';
+import db from '../dbConfig';
 
 class List extends Component {
   constructor(props) {
@@ -32,7 +33,7 @@ class List extends Component {
   }
 
   fetchItems() {
-    fetch('http://localhost:3333/items/' + this.props.user.uid)
+    fetch(db.url + '/items/' + this.props.user.uid)
         .then((response) => {
           if (response.status >= 400) {
               throw new Error("Bad response from server");
@@ -64,13 +65,12 @@ class List extends Component {
   }
 
   submitItem(text) {
-    console.log('the text: ', text)
     let data = {
       name: text,
       user: this.props.user.uid
     }
     superagent
-      .post('http://localhost:3333/items')
+      .post(db.url + '/items')
       .send(data)
       .end((err, res) => {
         if(err) {
