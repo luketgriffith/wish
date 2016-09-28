@@ -33,7 +33,8 @@ class Welcome extends Component {
         if(err) {
           console.log(err)
         } else {
-          let newUser = res.body;
+          console.log('getting user...', res.body)
+          let newUser = res.body[0];
           this.setState({
             user: newUser
           });
@@ -51,9 +52,9 @@ class Welcome extends Component {
     })
     return (
       <ScrollableTabView>
-        <Home tabLabel="Camera" user={this.props.user} navigator={this.props.navigator}/>
-        <Friends tabLabel="Friends" user={this.props.user} navigator={this.props.navigator}/>
-        <List tabLabel="List" user={this.props.user} navigator={this.props.navigator}/>
+        <Home tabLabel="Camera" user={this.state.user} navigator={this.props.navigator}/>
+        <Friends tabLabel="Friends" user={this.state.user} navigator={this.props.navigator}/>
+        <List tabLabel="List" user={this.state.user} navigator={this.props.navigator}/>
       </ScrollableTabView>
     )
   }

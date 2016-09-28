@@ -7,7 +7,6 @@ const Database = use('Database');
 class UsersController {
   * singeUser (request, response) {
     let email = request.all().email;
-    console.log(email);
     const user = yield Database.from('users').where('email', email)
     response.ok(user);
   }
