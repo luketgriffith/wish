@@ -47,25 +47,18 @@ class Friends extends Component {
   }
 
   getFriends() {
+    console.log('user id:', this.props.user.id)
     superagent
-      .get(db.url + '/friends/' + this.props.user.uid)
+      .get(db.url + '/friends/' + this.props.user.id)
       .end((err, res) => {
         if(err) {
           console.log(err)
         } else {
           console.log(res.body)
-          let confirmed = [];
-          let requests = [];
-          res.body.forEach((friend) => {
-            if(friend.confirmed === 1) {
-              confirmed.push(friend)
-            } else {
-              requests.push(friend)
-            }
-          })
+
           this.setState({
-            friends: this.state.friends.cloneWithRows(confirmed),
-            requests: this.state.requests.cloneWithRows(requests)
+            friends: this.state.friends.cloneWithRows(res.body.friends),
+            requests: this.state.requests.cloneWithRows(res.body.requests)
           })
         }
       })

@@ -2,6 +2,7 @@
 
 const User = use('App/Model/User');
 const Friend = use('App/Model/Friend');
+const FriendRequest = use('App/Model/FriendRequest');
 const Database = use('Database');
 
 class UsersController {
@@ -15,25 +16,20 @@ class UsersController {
     // const items = yield Database.from('items').where('user', request.param('id'))
     let term = request.all();
     const users = yield Database.from('users').whereRaw('firstName LIKE ?', '%' + term.term + '%');
-    const user = yield User.find(term.user)
-    // console.log('user...', user);
+    const user = yield User.find(term.user);
+    // // console.log('user...', user);
     const friends = yield user.friends().fetch();
-    const friendsList = friends.toJSON();
-    console.log(friendsList)
-    let newArray = users.map((user) => {
+    const pending = yield user.friendRequests().fetch();
+    // const friendsList = friends.toJSON();
+    // let usersArray = [];
+    // let pendingArray = [];
+    // let friendsArray = [];
+    // users.forEach((user) => {
+    //   friendsList.find((friend) => friend.id === )
+    // })
+    // console.log(friendsList)
 
-      let found = friendsList.find((friend) => friend.user_id === user.id)
-      let newUser = user;
-
-      if (found && found.confirmed === 0){
-        newUser.friend = 'pending';
-        return newUser
-      } else {
-        newUser.friend = false;
-        return newUser;
-      }
-    })
-    response.ok(newArray);
+    response.ok(users);
   }
 
   * add (request, response) {
@@ -45,22 +41,23 @@ class UsersController {
   * addFriend (request, response) {
     let data = request.all();
     let friend = data.friend;
-    let user = yield User.findBy('uid', data.user);
-    let newFriend = new Friend();
-    newFriend.firstName = friend.firstName;
-    newFriend.lastName = friend.lastName;
-    newFriend.email = friend.email;
-    newFriend.confirmed = false;
-    yield user.friends().save(newFriend);
-    response.ok(addFriend);
+    let user = yield User.find(data.friend);
+    let newFriend = new FriendRequest();
+    newFriend.from = data.user;
+    yield user.friendRequests().save(newFriend)
+    response.ok({ success: true });
   }
 
 
   * getFriends (request, response) {
-    let id = request.param('id')
-    let user = yield User.findBy('uid', id);
+    let id = request.param('id');
+    let user = yield User.find(id);
     let friends = yield user.friends().fetch();
-    response.ok(friends);
+    let friendsArray = friends.toJSON();
+    let pending = yield user.friendRequests().fetch();
+    let pendingArray = pending.toJSON();
+
+    response.ok({ friends: friendsArray, requests: pendingArray });
   }
 
   * confirmFriend (request, response) {

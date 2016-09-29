@@ -21,9 +21,11 @@ class Welcome extends Component {
     }
 
   }
+
   static propTypes = {
     navigator: PropTypes.object.isRequired,
   }
+
   componentWillMount() {
     let user = { email: this.state.user.email };
     superagent
@@ -39,7 +41,7 @@ class Welcome extends Component {
             user: newUser
           });
         }
-      })
+      });
   }
   render() {
     const styles = StyleSheet.create({
@@ -50,13 +52,21 @@ class Welcome extends Component {
         backgroundColor: '#ffffff',
       }
     })
-    return (
-      <ScrollableTabView>
-        <Home tabLabel="Camera" user={this.state.user} navigator={this.props.navigator}/>
-        <Friends tabLabel="Friends" user={this.state.user} navigator={this.props.navigator}/>
-        <List tabLabel="List" user={this.state.user} navigator={this.props.navigator}/>
-      </ScrollableTabView>
-    )
+    let content;
+
+    if(this.state.user && this.state.user.id) {
+      content = (
+        <ScrollableTabView>
+          <Home tabLabel="Camera" user={this.state.user} navigator={this.props.navigator}/>
+          <Friends tabLabel="Friends" user={this.state.user} navigator={this.props.navigator}/>
+          <List tabLabel="List" user={this.state.user} navigator={this.props.navigator}/>
+        </ScrollableTabView>
+      )
+    } else {
+       content = (<View><Text>Loading...</Text></View>)
+    }
+
+    return <View>{content}</View>;
   }
 }
 

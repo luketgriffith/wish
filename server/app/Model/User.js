@@ -7,6 +7,10 @@ class User extends Lucid {
         return this.hasMany('App/Model/Friend')
     }
 
+  friendRequests() {
+    return this.hasMany('App/Model/FriendRequest')
+  }
+
   items() {
     return this.hasMany('App/Model/Item')
   }

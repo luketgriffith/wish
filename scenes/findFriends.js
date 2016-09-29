@@ -50,21 +50,21 @@ class FindFriends extends Component {
         if(err) {
           console.log('errrrr', err)
         } else {
-          let pending =[],
-          users = [];
+          // let pending =[],
+          // users = [];
 
           console.log('found friends', res.body)
-          res.body.forEach((res) => {
-            if (res.friend === true) {
-              friends.push(res);
-            } else {
-              pending.push(res)
-            }
-          })
+          // res.body.forEach((res) => {
+          //   if (res.friend === true) {
+          //     friends.push(res);
+          //   } else {
+          //     pending.push(res)
+          //   }
+          // })
 
           this.setState({
-              pending: this.state.users.cloneWithRows(pending),
-              users: this.state.pending.cloneWithRows(users)
+              // pending: this.state.users.cloneWithRows(pending),
+              users: this.state.users.cloneWithRows(res.body)
           });
         }
       })
@@ -73,9 +73,12 @@ class FindFriends extends Component {
   addFriend(friend) {
     console.log('the friend...', friend);
     let data = {
-      user: this.props.user.uid,
-      friend: friend
+      user: this.props.user.id,
+      friend: friend.id
     }
+
+    console.log('the data...', data)
+
     superagent
       .post(db.url + '/addFriend')
       .send(data)
@@ -99,7 +102,7 @@ class FindFriends extends Component {
             <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
          </View>
 
-         <View style={{ backgroundColor: 'powderBlue', height: 40 }}>
+         <View style={{ backgroundColor: 'blue', height: 40 }}>
           <TouchableOpacity onPress={this.addFriend.bind(null, item)}>
             <Text style={{ color: 'white' }}>Add Friend</Text>
           </TouchableOpacity>
@@ -119,7 +122,7 @@ class FindFriends extends Component {
             <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
          </View>
 
-         <View style={{ backgroundColor: 'steelBlue', height: 40 }}>
+         <View style={{ backgroundColor: 'blue', height: 40 }}>
             <Text style={{ color: 'white' }}>Friend Request Pending</Text>
          </View>
       </View>
