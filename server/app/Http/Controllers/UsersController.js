@@ -14,12 +14,26 @@ class UsersController {
   * findFriends (request, response) {
     // const items = yield Database.from('items').where('user', request.param('id'))
     let term = request.all();
-    console.log('term: ', term)
     const users = yield Database.from('users').whereRaw('firstName LIKE ?', '%' + term.term + '%');
-    const user = yield User.find(term.id)
+    const user = yield User.find(term.user)
     const friends = yield user.friends().fetch();
-    console.log(friends);
-    yield response.ok(users);
+    const friendsList = friends.toJSON();
+    let newArray = users.map((user) => {
+      let found = friendsList.find((friend) => friend.user_id === user.id)
+      let newUser = user;
+      if(found && found.confirmed === 1) {
+        //the user is already a friend
+        newUser.friend = true;
+        return newUser;
+      } else if (found && found.confirmed === 0){
+        newUser.friend = 'pending';
+        return newUser
+      } else {
+        newUser.friend = false;
+        return newUser;
+      }
+    })
+    response.ok(newArray);
   }
 
   * add (request, response) {
@@ -46,7 +60,7 @@ class UsersController {
     let id = request.param('id')
     let user = yield User.findBy('uid', id);
     let friends = yield user.friends().fetch();
-    yield response.ok(friends);
+    response.ok(friends);
   }
 
   * confirmFriend (request, response) {
