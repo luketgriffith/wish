@@ -16,16 +16,16 @@ class UsersController {
     let term = request.all();
     const users = yield Database.from('users').whereRaw('firstName LIKE ?', '%' + term.term + '%');
     const user = yield User.find(term.user)
+    // console.log('user...', user);
     const friends = yield user.friends().fetch();
     const friendsList = friends.toJSON();
+    console.log(friendsList)
     let newArray = users.map((user) => {
+
       let found = friendsList.find((friend) => friend.user_id === user.id)
       let newUser = user;
-      if(found && found.confirmed === 1) {
-        //the user is already a friend
-        newUser.friend = true;
-        return newUser;
-      } else if (found && found.confirmed === 0){
+
+      if (found && found.confirmed === 0){
         newUser.friend = 'pending';
         return newUser
       } else {

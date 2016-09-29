@@ -11,7 +11,10 @@ class FindFriends extends Component {
     super(props);
     this.state = {
       text: '',
-      friends: new ListView.DataSource({
+      pending: new ListView.DataSource({
+          rowHasChanged: (row1, row2) => row1 !== row2,
+      }),
+      users: new ListView.DataSource({
           rowHasChanged: (row1, row2) => row1 !== row2,
       })
     }
@@ -19,6 +22,7 @@ class FindFriends extends Component {
     this.onPress = this.onPress.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.renderItem = this.renderItem.bind(this);
+    this.renderPending = this.renderPending.bind(this);
     this.addFriend = this.addFriend.bind(this);
   }
 
@@ -34,13 +38,10 @@ class FindFriends extends Component {
   }
 
   onSearch() {
-    console.log('props:', this.props.user)
     let data = {
       term: this.state.text,
       user: this.props.user.id
     };
-
-    console.log('the data...', data);
 
     superagent
       .post(db.url + '/findFriends')
@@ -49,9 +50,21 @@ class FindFriends extends Component {
         if(err) {
           console.log('errrrr', err)
         } else {
+          let pending =[],
+          users = [];
+
           console.log('found friends', res.body)
+          res.body.forEach((res) => {
+            if (res.friend === true) {
+              friends.push(res);
+            } else {
+              pending.push(res)
+            }
+          })
+
           this.setState({
-              friends: this.state.friends.cloneWithRows(res.body)
+              pending: this.state.users.cloneWithRows(pending),
+              users: this.state.pending.cloneWithRows(users)
           });
         }
       })
@@ -86,10 +99,28 @@ class FindFriends extends Component {
             <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
          </View>
 
-         <View style={{ backgroundColor: 'black', height: 40 }}>
+         <View style={{ backgroundColor: 'powderBlue', height: 40 }}>
           <TouchableOpacity onPress={this.addFriend.bind(null, item)}>
             <Text style={{ color: 'white' }}>Add Friend</Text>
           </TouchableOpacity>
+         </View>
+      </View>
+    );
+  }
+
+  renderPending(item) {
+    return (
+      <View style={{ backgroundColor: '#EEE', height: 80, padding: 5, flexDirection: 'row' }}>
+        <Image
+           style={{width: 50, height: 50, borderRadius: 5 }}
+           source={{uri: item.img_url }}
+         />
+         <View style={{ padding: 20, width: 150 }}>
+            <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
+         </View>
+
+         <View style={{ backgroundColor: 'steelBlue', height: 40 }}>
+            <Text style={{ color: 'white' }}>Friend Request Pending</Text>
          </View>
       </View>
     );
@@ -114,8 +145,16 @@ class FindFriends extends Component {
         </TouchableOpacity>
         <View>
           <ListView
-            dataSource={this.state.friends}
+            dataSource={this.state.users}
             renderRow={this.renderItem}
+            enableEmptySections={true}
+            style={{ }}
+          />
+        </View>
+        <View>
+          <ListView
+            dataSource={this.state.pending}
+            renderRow={this.renderPending}
             enableEmptySections={true}
             style={{ }}
           />
