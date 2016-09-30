@@ -32,10 +32,13 @@ class Friends extends Component {
   }
 
   confirmFriend(friend) {
+    
     console.log('tha friend: ', friend)
     let data = {
-      id: friend.id
+      user: this.props.user,
+      friend: friend
     }
+
     superagent
       .post(db.url + '/confirmFriend')
       .send(data)

@@ -11,6 +11,9 @@ class FindFriends extends Component {
     super(props);
     this.state = {
       text: '',
+      friends: new ListView.DataSource({
+          rowHasChanged: (row1, row2) => row1 !== row2,
+      }),
       pending: new ListView.DataSource({
           rowHasChanged: (row1, row2) => row1 !== row2,
       }),
@@ -24,6 +27,7 @@ class FindFriends extends Component {
     this.renderItem = this.renderItem.bind(this);
     this.renderPending = this.renderPending.bind(this);
     this.addFriend = this.addFriend.bind(this);
+    this.renderFriends = this.renderFriends.bind(this);
   }
 
   onPress() {
@@ -50,21 +54,11 @@ class FindFriends extends Component {
         if(err) {
           console.log('errrrr', err)
         } else {
-          // let pending =[],
-          // users = [];
-
           console.log('found friends', res.body)
-          // res.body.forEach((res) => {
-          //   if (res.friend === true) {
-          //     friends.push(res);
-          //   } else {
-          //     pending.push(res)
-          //   }
-          // })
-
           this.setState({
-              // pending: this.state.users.cloneWithRows(pending),
-              users: this.state.users.cloneWithRows(res.body)
+              friends: this.state.friends.cloneWithRows(res.body.friends),
+              pending: this.state.pending.cloneWithRows(res.body.pending),
+              users: this.state.users.cloneWithRows(res.body.users)
           });
         }
       })
@@ -91,21 +85,19 @@ class FindFriends extends Component {
       })
   }
 
-  renderItem(item) {
+  renderFriends(item) {
     return (
       <View style={{ backgroundColor: '#EEE', height: 80, padding: 5, flexDirection: 'row' }}>
         <Image
            style={{width: 50, height: 50, borderRadius: 5 }}
-           source={{uri: item.img_url }}
+           source={{uri: item.img_url ? item.img_url : 'http://lorempixel.com/200/200' }}
          />
          <View style={{ padding: 20, width: 150 }}>
             <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
          </View>
 
          <View style={{ backgroundColor: 'blue', height: 40 }}>
-          <TouchableOpacity onPress={this.addFriend.bind(null, item)}>
-            <Text style={{ color: 'white' }}>Add Friend</Text>
-          </TouchableOpacity>
+            <Text style={{ color: 'white' }}>Already friends</Text>
          </View>
       </View>
     );
@@ -129,6 +121,28 @@ class FindFriends extends Component {
     );
   }
 
+  renderItem(item) {
+    return (
+      <View style={{ backgroundColor: '#EEE', height: 80, padding: 5, flexDirection: 'row' }}>
+        <Image
+           style={{width: 50, height: 50, borderRadius: 5 }}
+           source={{uri: item.img_url }}
+         />
+         <View style={{ padding: 20, width: 150 }}>
+            <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
+         </View>
+
+         <View style={{ backgroundColor: 'blue', height: 40 }}>
+          <TouchableOpacity onPress={this.addFriend.bind(null, item)}>
+            <Text style={{ color: 'white' }}>Add Friend</Text>
+          </TouchableOpacity>
+         </View>
+      </View>
+    );
+  }
+
+
+
   render() {
     return (
       <View style={{ paddingTop: 50 }}>
@@ -146,6 +160,25 @@ class FindFriends extends Component {
         <TouchableOpacity onPress={this.onPress}>
           <Text>Back</Text>
         </TouchableOpacity>
+
+        <View>
+          <ListView
+            dataSource={this.state.friends}
+            renderRow={this.renderFriends}
+            enableEmptySections={true}
+            style={{ }}
+          />
+        </View>
+
+        <View>
+          <ListView
+          dataSource={this.state.pending}
+          renderRow={this.renderPending}
+          enableEmptySections={true}
+          style={{ }}
+          />
+        </View>
+
         <View>
           <ListView
             dataSource={this.state.users}
@@ -154,14 +187,7 @@ class FindFriends extends Component {
             style={{ }}
           />
         </View>
-        <View>
-          <ListView
-            dataSource={this.state.pending}
-            renderRow={this.renderPending}
-            enableEmptySections={true}
-            style={{ }}
-          />
-        </View>
+
       </View>
     )
   }
