@@ -40,10 +40,16 @@ class UsersController {
 
   * addFriend (request, response) {
     let data = request.all();
-    let friend = data.friend;
+
     let user = yield User.find(data.friend);
+
     let newFriend = new FriendRequest();
-    newFriend.from = data.user;
+
+    newFriend.from = data.user.id;
+    newFriend.firstName = data.friend.firstName;
+    newFriend.lastName = data.friend.lastName;
+    newFriend.img_url = data.friend.img_url;
+
     yield user.friendRequests().save(newFriend)
     response.ok({ success: true });
   }

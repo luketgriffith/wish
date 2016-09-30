@@ -73,7 +73,7 @@ class FindFriends extends Component {
   addFriend(friend) {
     console.log('the friend...', friend);
     let data = {
-      user: this.props.user.id,
+      user: this.props.user,
       friend: friend.id
     }
 
@@ -116,7 +116,7 @@ class FindFriends extends Component {
       <View style={{ backgroundColor: '#EEE', height: 80, padding: 5, flexDirection: 'row' }}>
         <Image
            style={{width: 50, height: 50, borderRadius: 5 }}
-           source={{uri: item.img_url }}
+           source={{uri: item.img_url ? item.img_url : 'http://lorempixel.com/200/200' }}
          />
          <View style={{ padding: 20, width: 150 }}>
             <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>

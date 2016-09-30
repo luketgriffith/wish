@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component, PropTypes } from 'react'
-import { View, TouchableHighlight, StyleSheet, Text } from 'react-native';
+import { View, TouchableHighlight, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import base from '../config';
 import Home from './home';
 import Friends from './friends';
@@ -19,7 +19,6 @@ class Welcome extends Component {
     this.state = {
       user: this.props.user
     }
-
   }
 
   static propTypes = {
@@ -43,6 +42,7 @@ class Welcome extends Component {
         }
       });
   }
+
   render() {
     const styles = StyleSheet.create({
       container: {
@@ -56,11 +56,13 @@ class Welcome extends Component {
 
     if(this.state.user && this.state.user.id) {
       content = (
+        <View>
         <ScrollableTabView>
           <Home tabLabel="Camera" user={this.state.user} navigator={this.props.navigator}/>
           <Friends tabLabel="Friends" user={this.state.user} navigator={this.props.navigator}/>
           <List tabLabel="List" user={this.state.user} navigator={this.props.navigator}/>
         </ScrollableTabView>
+        </View>
       )
     } else {
        content = (<View><Text>Loading...</Text></View>)

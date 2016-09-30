@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Text,
   AppRegistry,
-  Dimensions
+  Dimensions,
+  TouchableOpacity
  } from 'react-native';
 var t = require('tcomb-form-native');
 // import ReadImageData from 'react-native-asset-library-to-base64';
@@ -17,6 +18,26 @@ import s3 from '../db';
 
 
 class Home extends Component {
+  constructor(props) {
+    super(props);
+
+    this.logOut = this.logOut.bind(this);
+  }
+
+  logOut() {
+    base.auth().signOut().catch(function(err) {
+
+    }).then(function() {
+      // browserHistory.push('/');
+      this.props.navigator.push({
+        component: Login,
+        title: '',
+        passProps: {
+
+        }
+      })
+    });
+  }
 
   render() {
     const styles = StyleSheet.create({
@@ -67,7 +88,7 @@ class Home extends Component {
           type: "image/jpeg"
         }
 
-      
+
         RNS3.put(file, options).then(response => {
           console.log('waasdfdsa')
           if (response.status !== 201)

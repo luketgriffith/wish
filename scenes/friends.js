@@ -1,10 +1,12 @@
 'use strict';
 
 import React, { Component, PropTypes } from 'react'
-import { View, TouchableHighlight, TouchableOpacity, StyleSheet, Text, PanResponder, ListView, Image } from 'react-native';
+import { View, TouchableHighlight, TouchableOpacity, StyleSheet, Text, PanResponder, ListView, Image, Dimensions } from 'react-native';
 import FindFriends from './findFriends';
 import superagent from 'superagent';
 import db from '../dbConfig';
+import base from '../config';
+import Login from './login';
 
 class Friends extends Component {
   constructor(props) {
@@ -22,6 +24,7 @@ class Friends extends Component {
     this.renderReq = this.renderReq.bind(this);
     this.getFriends = this.getFriends.bind(this);
     this.confirmFriend = this.confirmFriend.bind(this);
+    this.logOut = this.logOut.bind(this);
   }
 
   componentWillMount() {
@@ -54,7 +57,7 @@ class Friends extends Component {
         if(err) {
           console.log(err)
         } else {
-          console.log(res.body)
+          console.log('got friends n such: ', res.body)
 
           this.setState({
             friends: this.state.friends.cloneWithRows(res.body.friends),
@@ -81,7 +84,7 @@ class Friends extends Component {
       <View style={{ backgroundColor: '#EEE', height: 80, padding: 5, flexDirection: 'row' }}>
         <Image
            style={{width: 50, height: 50, borderRadius: 5 }}
-           source={{uri: item.img_url }}
+           source={{uri: item.img_url ? item.img_url : 'http://lorempixel.com/200/200' }}
          />
          <View style={{ padding: 20, width: 150 }}>
             <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
@@ -97,7 +100,7 @@ class Friends extends Component {
       <View style={{ backgroundColor: '#EEE', height: 80, padding: 5, flexDirection: 'row' }}>
         <Image
            style={{width: 50, height: 50, borderRadius: 5 }}
-           source={{uri: item.img_url }}
+           source={{uri: item.img_url ? item.img_url : 'http://lorempixel.com/200/200' }}
          />
          <View style={{ padding: 20, width: 150 }}>
             <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
@@ -109,6 +112,20 @@ class Friends extends Component {
          </View>
       </View>
     );
+  }
+
+  logOut() {
+    base.auth().signOut().catch((err) => {
+
+    }).then(() => {
+      this.props.navigator.push({
+        component: Login,
+        title: '',
+        passProps: {
+
+        }
+      })
+    })
   }
 
   render() {
