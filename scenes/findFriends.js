@@ -81,6 +81,7 @@ class FindFriends extends Component {
           console.log('errr')
         } else {
           console.log(res.body)
+          this.onSearch();
         }
       })
   }

@@ -64,6 +64,7 @@ class Home extends Component {
     return (
       <View style={styles.container}>
         <Camera
+          captureTarget={Camera.constants.CaptureTarget.disk}
           ref={(cam) => {
             this.camera = cam;
           }}
@@ -76,37 +77,31 @@ class Home extends Component {
   }
 
   takePicture() {
-    console.log('this.props.user.uid', this.props.user.uid);
+    // console.log('this.props.user.uid', this.props.user.uid);
 
     this.camera.capture().catch((error) => {
       console.log('errrrrrrrr:', error)
     }).then((data) => {
-      console.log(data.path);
+      console.log('the data we got from camera: ', data);
       let file = {
           uri: data.path,
           name: "image.jpeg",
           type: "image/jpeg"
         }
 
+        let options = {
+          keyPrefix: "images/",
+          bucket: "wishlistgriffith",
+          region: "us-east-1",
+          accessKey: s3.access_key,
+          secretKey: s3.secret_key,
+          successActionStatus: 201
+        }
 
-        RNS3.put(file, options).then(response => {
-          console.log('waasdfdsa')
-          if (response.status !== 201)
-            throw new Error("Failed to upload image to S3");
-          console.log(response.body);
-          /**
-           * {
-           *   postResponse: {
-           *     bucket: "your-bucket",
-           *     etag : "9f620878e06d28774406017480a59fd4",
-           *     key: "uploads/image.png",
-           *     location: "https://your-bucket.s3.amazonaws.com/uploads%2Fimage.png"
-           *   }
-           * }
-           */
-        }).catch((err) => {
-          console.log('errrrrr: ', err)
-        })
+        RNS3.put(file, options)
+          .then(response => console.log('response: ', response))
+          .catch(err => console.log('error: ', err))
+
 
       }).catch((err) => {
         console.log('SHOOOOOOT ERROR: ', err)
