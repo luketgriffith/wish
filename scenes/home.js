@@ -15,6 +15,7 @@ import base from '../config';
 import Camera from 'react-native-camera';
 import { RNS3 } from 'react-native-aws3';
 import s3 from '../db';
+import Confirm from './confirm';
 
 
 class Home extends Component {
@@ -85,7 +86,7 @@ class Home extends Component {
       console.log('the data we got from camera: ', data);
       let file = {
           uri: data.path,
-          name: "image.jpeg",
+          name: data.path + "/image.jpeg",
           type: "image/jpeg"
         }
 
@@ -99,9 +100,18 @@ class Home extends Component {
         }
 
         RNS3.put(file, options)
-          .then(response => console.log('response: ', response))
+          .then(response => {
+            console.log('response: ', response)
+            this.props.navigator.push({
+              component: Confirm,
+              title: '',
+              passProps: {
+                image: response.body.postResponse.location,
+                navigator: this.props.navigator
+              }
+            })
+          })
           .catch(err => console.log('error: ', err))
-
 
       }).catch((err) => {
         console.log('SHOOOOOOT ERROR: ', err)
