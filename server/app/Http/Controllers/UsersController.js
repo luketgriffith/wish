@@ -17,7 +17,7 @@ class UsersController {
     let term = request.all();
     const users = yield Database.from('users').whereRaw('firstName LIKE ?', '%' + term.term + '%');
     const user = yield User.find(term.user);
-    // // console.log('user...', user);
+    console.log('user...', user.toJSON());
     const friends = yield user.friends().whereRaw('firstName LIKE ?', '%' + term.term + '%').fetch();
     const pending = yield Database.from('friend_requests').where('from_id', term.user);
     //
@@ -33,7 +33,7 @@ class UsersController {
     users.forEach((user) => {
       let isFriend = friendsArray.find((f) => f.profile_id === user.id )
       console.log('isFriend: ', isFriend);
-      let isPending = pendingArray.find((p) => p.from === user.id )
+      let isPending = pendingArray.find((p) => p.from_id === user.id )
       console.log('isPending: ', isPending);
 
       if(!isFriend && !isPending) {
