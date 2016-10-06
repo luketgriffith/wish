@@ -27,14 +27,31 @@ class UsersController {
 
     let friendsArray = friends.toJSON();
     
-    let pendingArray = pending.map((req) => {
-      return this.getUser(req.from_id)
-    })
+    function* getUser (id) {
+      // console.log('running wat...', id)
+      yield User.find(id);
+    }
+    
+    let pendingArray = [];
+    
+    for( var i = 0; i < pending.length; i++ ) {
+      const getUser = yield User.find(pending[i].from_id)
+      let gotUser = getUser.toJSON()
+      pendingArray.push(gotUser)
+    }
+    //  pending.map((req) => {
+    //   console.log('the req...', req)
+    //   
+    //   let wat = getUser()
+    //   return wat.next(req.from_id).value
+    //   // return wat;
+    // })
     
     console.log('pending array: ', pendingArray);
     
     let newArray = [];
-
+    
+    
     users.forEach((user) => {
       let isFriend = friendsArray.find((f) => f.profile_id === user.id )
       console.log('isFriend: ', isFriend);
@@ -53,10 +70,7 @@ class UsersController {
     });
   }
   
-  * getUser (id) {
-    let user = yield User.find(id);
-    return user;
-  }
+
   
   * add (request, response) {
     let data = request.all();
