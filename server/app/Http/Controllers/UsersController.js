@@ -26,8 +26,13 @@ class UsersController {
     console.log('pending: ', pending);
 
     let friendsArray = friends.toJSON();
-    let pendingArray = pending;
-
+    
+    let pendingArray = pending.map((req) => {
+      return this.getUser(req.from_id)
+    })
+    
+    console.log('pending array: ', pendingArray);
+    
     let newArray = [];
 
     users.forEach((user) => {
@@ -47,7 +52,12 @@ class UsersController {
       pending: pendingArray
     });
   }
-
+  
+  * getUser (id) {
+    let user = yield User.find(id);
+    return user;
+  }
+  
   * add (request, response) {
     let data = request.all();
     const user = yield User.create(data);
