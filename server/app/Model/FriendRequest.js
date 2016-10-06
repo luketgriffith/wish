@@ -4,7 +4,7 @@ const Lucid = use('Lucid')
 
 class FriendRequest extends Lucid {
   user () {
-        return this.belongsToMany('App/Model/User')
+        return this.belongsTo('App/Model/User')
     }
 }
 

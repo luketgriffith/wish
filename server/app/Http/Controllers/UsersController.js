@@ -19,14 +19,14 @@ class UsersController {
     const user = yield User.find(term.user);
     // // console.log('user...', user);
     const friends = yield user.friends().whereRaw('firstName LIKE ?', '%' + term.term + '%').fetch();
-    const pending = yield user.friendRequests().fetch();
-
+    const pending = yield Database.from('friend_requests').where('from_id', term.user);
+    //
     console.log('users: ', users)
     console.log('frinds:', friends.toJSON());
-    console.log('pending: ', pending.toJSON());
+    console.log('pending: ', pending);
 
     let friendsArray = friends.toJSON();
-    let pendingArray = pending.toJSON();
+    let pendingArray = pending;
 
     let newArray = [];
 
@@ -56,17 +56,14 @@ class UsersController {
 
   * addFriend (request, response) {
     let data = request.all();
+    console.log('data...', data)
 
-    let user = yield User.find(data.friend);
+    let req = {
+      to_id: data.friend,
+      from_id: data.user.id
+    }
 
-    let newFriend = new FriendRequest();
-    newFriend.wat = 'meow';
-    // newFriend.from = data.user.id;
-    // newFriend.firstName = data.user.firstName;
-    // newFriend.lastName = data.user.lastName;
-    // newFriend.img_url = data.user.img_url;
-
-    yield user.friendRequests().save(newFriend)
+    const newRequest = yield FriendRequest.create(req);
     response.ok({ success: true });
   }
 
