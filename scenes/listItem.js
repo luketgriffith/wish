@@ -6,12 +6,15 @@ class ListItem extends Component {
   render() {
     return (
       <TouchableHighlight onPress={this.props.onPress}>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', backgroundColor: '#A0DDFF', padding: 5, justifyContent: 'center', alignItems: 'center' }}>
           <Image
-            style={{width: 70, height: 70}}
+            style={{width: 60, height: 60}}
            source={{ uri: this.props.item.img_url }}
           />
-          <Text style={{ padding: 5, marginTop: 5, marginBottom: 5, backgroundColor: 'blue' }}>{this.props.item.description}</Text>
+          <Text
+            style={{  flex: 1, paddingLeft: 5 }}>
+            {this.props.item.description}
+          </Text>
         </View>
       </TouchableHighlight>
     );
