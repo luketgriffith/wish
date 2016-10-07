@@ -33,7 +33,7 @@ class List extends Component {
   }
 
   fetchItems() {
-    fetch(db.url + '/items/' + this.props.user.uid)
+    fetch(db.url + '/items/' + this.props.user.id)
         .then((response) => {
           if (response.status >= 400) {
               throw new Error("Bad response from server");
@@ -41,6 +41,7 @@ class List extends Component {
           return response.json();
       })
       .then((stories) => {
+        console.log('the stuff: ', stories)
           this.setState({
               items: this.state.items.cloneWithRows(stories)
           });
@@ -65,21 +66,21 @@ class List extends Component {
   }
 
   submitItem(text) {
-    let data = {
-      name: text,
-      user: this.props.user.uid
-    }
-    superagent
-      .post(db.url + '/items')
-      .send(data)
-      .end((err, res) => {
-        if(err) {
-          console.log(err);
-        } else {
-          this.fetchItems();
-        }
-
-      })
+    // let data = {
+    //   name: text,
+    //   user: this.props.user.uid
+    // }
+    // superagent
+    //   .post(db.url + '/items')
+    //   .send(data)
+    //   .end((err, res) => {
+    //     if(err) {
+    //       console.log(err);
+    //     } else {
+    //       this.fetchItems();
+    //     }
+    //
+    //   })
   }
 
   cancelButton() {

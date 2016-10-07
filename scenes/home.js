@@ -84,35 +84,15 @@ class Home extends Component {
       console.log('errrrrrrrr:', error)
     }).then((data) => {
       console.log('the data we got from camera: ', data);
-      let file = {
-          uri: data.path,
-          name: data.path + "/image.jpeg",
-          type: "image/jpeg"
+      this.props.navigator.push({
+        component: Confirm,
+        title: '',
+        passProps: {
+          image: data.path,
+          navigator: this.props.navigator,
+          user: this.props.user
         }
-
-        let options = {
-          keyPrefix: "images/",
-          bucket: "wishlistgriffith",
-          region: "us-east-1",
-          accessKey: s3.access_key,
-          secretKey: s3.secret_key,
-          successActionStatus: 201
-        }
-
-        RNS3.put(file, options)
-          .then(response => {
-            console.log('response: ', response)
-            this.props.navigator.push({
-              component: Confirm,
-              title: '',
-              passProps: {
-                image: response.body.postResponse.location,
-                navigator: this.props.navigator
-              }
-            })
-          })
-          .catch(err => console.log('error: ', err))
-
+      })
       }).catch((err) => {
         console.log('SHOOOOOOT ERROR: ', err)
       })
