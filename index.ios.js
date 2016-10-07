@@ -7,7 +7,8 @@ import {
   View,
   StatusBar,
   NavigatorIOS,
-  TouchableOpacity
+  TouchableOpacity,
+  AlertIOS
 } from 'react-native';
 import base from './config';
 import Login from './scenes/login'

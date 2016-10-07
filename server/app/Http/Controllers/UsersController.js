@@ -13,53 +13,34 @@ class UsersController {
   }
 
   * findFriends (request, response) {
-    // const items = yield Database.from('items').where('user', request.param('id'))
     let term = request.all();
     const users = yield Database.from('users').whereRaw('firstName LIKE ?', '%' + term.term + '%');
     const user = yield User.find(term.user);
     console.log('user...', user.toJSON());
     const friends = yield user.friends().whereRaw('firstName LIKE ?', '%' + term.term + '%').fetch();
     const pending = yield Database.from('friend_requests').where('from_id', term.user);
-    //
-    console.log('users: ', users)
-    console.log('frinds:', friends.toJSON());
-    console.log('pending: ', pending);
 
     let friendsArray = friends.toJSON();
-    
+
     function* getUser (id) {
-      // console.log('running wat...', id)
       yield User.find(id);
     }
-    
+
     let pendingArray = [];
-    
+
     for( var i = 0; i < pending.length; i++ ) {
-      const getUser = yield User.find(pending[i].from_id)
+      const getUser = yield User.find(pending[i].to_id)
       let gotUser = getUser.toJSON()
       pendingArray.push(gotUser)
     }
-    //  pending.map((req) => {
-    //   console.log('the req...', req)
-    //   
-    //   let wat = getUser()
-    //   return wat.next(req.from_id).value
-    //   // return wat;
-    // })
-    
-    console.log('pending array: ', pendingArray);
-    
-    let newArray = [];
-    
-    
-    users.forEach((user) => {
-      let isFriend = friendsArray.find((f) => f.profile_id === user.id )
-      console.log('isFriend: ', isFriend);
-      let isPending = pendingArray.find((p) => p.from_id === user.id )
-      console.log('isPending: ', isPending);
 
+    let newArray = [];
+
+    users.forEach((user2) => {
+      let isFriend = friendsArray.find((f) => f.profile_id === user2.id )
+      let isPending = pendingArray.find((p) => p.id === user2.id )
       if(!isFriend && !isPending) {
-        newArray.push(user);
+        newArray.push(user2);
       }
     });
 
@@ -69,9 +50,7 @@ class UsersController {
       pending: pendingArray
     });
   }
-  
 
-  
   * add (request, response) {
     let data = request.all();
     const user = yield User.create(data);
@@ -97,8 +76,17 @@ class UsersController {
     let user = yield User.find(id);
     let friends = yield user.friends().fetch();
     let friendsArray = friends.toJSON();
-    let pending = yield user.friendRequests().fetch();
-    let pendingArray = pending.toJSON();
+    let pending = yield Database.from('friend_requests').where('to_id', id);
+    let pendingArray = [];
+    if (Array.isArray(pending)){
+      for (var i = 0; i < pending.length; i++) {
+        let otherUser = yield User.find(pending[i].from_id)
+        pendingArray.push(otherUser);
+      }
+    } else {
+      let otherUser2 = yield User.find(pending[i].from_id)
+      pendingArray.push(otherUser2);
+    }
 
     response.ok({ friends: friendsArray, requests: pendingArray });
   }
@@ -112,10 +100,10 @@ class UsersController {
     newFriend.firstName = data.friend.firstName;
     newFriend.lastName = data.friend.lastName;
     newFriend.img_url = data.friend.img_url;
-    newFriend.profile_id = data.friend.from;
+    newFriend.profile_id = data.friend.id;
 
     yield user.friends().save(newFriend)
-    yield user.friendRequests().where('from', data.friend.from).delete();
+    yield user.friendRequests().where('from_id', data.friend.id).where('to_id', data.user.id).delete();
     response.ok({ success: true });
   }
 

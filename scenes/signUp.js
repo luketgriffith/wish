@@ -1,7 +1,7 @@
 'use strict';
 var RNUploader = require('NativeModules').RNUploader;
 import React, { Component, PropTypes } from 'react'
-import { View, TouchableHighlight, StyleSheet, Text, PanResponder } from 'react-native';
+import { View, TouchableHighlight, StyleSheet, Text, PanResponder, AlertIOS } from 'react-native';
 import SimpleGesture from 'react-native-simple-gesture';
 var t = require('tcomb-form-native');
 import styles from './styles';
@@ -58,7 +58,6 @@ class SignUp extends Component {
         let data = {
           firstName: value.firstName,
           lastName: value.lastName,
-          uid: user.uid,
           email: value.email
         }
 
