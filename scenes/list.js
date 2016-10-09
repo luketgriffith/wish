@@ -9,6 +9,7 @@ import SingleItem from './singleItem';
 import fetch from 'isomorphic-fetch';
 import superagent from 'superagent';
 import db from '../dbConfig';
+import Swipeout from 'react-native-swipeout';
 
 class List extends Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class List extends Component {
   }
 
   fetchItems() {
-    fetch(db.url + '/items/' + this.props.user.id)
+    fetch(db.url + '/myItems/' + this.props.user.id)
         .then((response) => {
           if (response.status >= 400) {
               throw new Error("Bad response from server");
@@ -106,8 +107,19 @@ class List extends Component {
 }
 
 renderItem(item) {
+  var swipeoutBtns = [
+  {
+    text: 'Button'
+  }
+]
+
+// Swipeout component
   return (
-    <ListItem item={item} onPress={() => this.onPress(item)} />
+    <Swipeout left={swipeoutBtns}>
+    <View>
+      <ListItem item={item} />
+    </View>
+    </Swipeout>
   );
 }
 

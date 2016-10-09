@@ -5,7 +5,7 @@ import { View, TouchableHighlight, Text, Image } from 'react-native';
 class ListItem extends Component {
   render() {
     return (
-      <TouchableHighlight onPress={this.props.onPress}>
+      <TouchableHighlight>
         <View style={{ flexDirection: 'row', backgroundColor: '#A0DDFF', padding: 5, justifyContent: 'center', alignItems: 'center' }}>
           <Image
             style={{width: 60, height: 60}}

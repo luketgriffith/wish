@@ -16,6 +16,14 @@ class ItemsController {
     response.ok(itemsJson)
   }
 
+  * myItems (request, response) {
+    let id = request.params('id')
+    const user = yield User.find(id);
+    const items = yield user.items().fetch();
+    const itemsJson = items.toJSON();
+    response.ok(itemsJson);
+  }
+
   * add (request, response) {
     let data = request.all();
     console.log('the data...', data)

@@ -17,6 +17,7 @@
 
 const Route = use('Route')
 Route.post('/getList', 'ItemsController.index')
+Route.get('/myItems/:id', 'ItemsController.myItems')
 Route.post('/getUser', 'UsersController.singeUser')
 Route.post('/items', 'ItemsController.add')
 Route.post('/users', 'UsersController.add')
