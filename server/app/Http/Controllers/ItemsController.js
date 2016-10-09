@@ -35,6 +35,14 @@ class ItemsController {
 
     response.ok(item);
   }
+
+  * deleteItem (request, response) {
+    let id = request.params('id')
+    console.log('id...', id);
+    let item = yield Item.find(id.id);
+    yield item.delete();
+    response.ok({ success: true });
+  }
 }
 
 module.exports = ItemsController

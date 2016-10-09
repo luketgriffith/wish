@@ -10,7 +10,7 @@ import SignUp from './signUp';
 import styles from './styles';
 import superagent from 'superagent';
 import db from '../dbConfig';
-var ScrollableTabView = require('react-native-scrollable-tab-view');
+import ScrollableTabView, { ScrollableTabBar, } from 'react-native-scrollable-tab-view';
 
 class Welcome extends Component {
   constructor(props) {
@@ -57,7 +57,7 @@ class Welcome extends Component {
     if(this.state.user && this.state.user.id) {
       content = (
         <View>
-        <ScrollableTabView>
+        <ScrollableTabView locked={true}>
           <Home tabLabel="Camera" user={this.state.user} navigator={this.props.navigator}/>
           <Friends tabLabel="Friends" user={this.state.user} navigator={this.props.navigator}/>
           <List tabLabel="List" user={this.state.user} navigator={this.props.navigator}/>

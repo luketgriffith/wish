@@ -26,6 +26,7 @@ class List extends Component {
     this.submitItem = this.submitItem.bind(this);
     this.cancelButton = this.cancelButton.bind(this);
     this.onPress = this.onPress.bind(this);
+    this.delete = this.delete.bind(this);
   }
 
   static propTypes = {
@@ -54,7 +55,19 @@ class List extends Component {
   }
 
 
+  delete(item) {
+    console.log('the item...', item)
 
+    superagent
+      .del(db.url + '/items/' + item.id)
+      .end((err, res) => {
+        if(err) {
+          console.log(err)
+        } else {
+          this.fetchItems();
+        }
+      })
+  }
   onPress(item) {
     this.props.navigator.push({
       component: SingleItem,
@@ -109,13 +122,19 @@ class List extends Component {
 renderItem(item) {
   var swipeoutBtns = [
   {
-    text: 'Button'
+    text: 'View',
+    onPress: this.onPress.bind(null, item)
+  },
+  {
+    text: 'Delete',
+    backgroundColor: 'red',
+    onPress: this.delete.bind(null, item)
   }
 ]
 
 // Swipeout component
   return (
-    <Swipeout left={swipeoutBtns}>
+    <Swipeout right={swipeoutBtns}>
     <View>
       <ListItem item={item} />
     </View>
