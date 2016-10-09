@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 const styles = require('./styles.js')
 import { View, TouchableHighlight, Text, Image } from 'react-native';
+import Welcome from './welcome';
 
 class ListItem extends Component {
   render() {

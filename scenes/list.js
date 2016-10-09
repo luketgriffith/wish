@@ -68,13 +68,15 @@ class List extends Component {
         }
       })
   }
+
   onPress(item) {
     this.props.navigator.push({
       component: SingleItem,
       title: '',
       passProps: {
         user: this.props.user,
-        item: item
+        item: item,
+        navigator: this.props.navigator
       }
     })
   }
