@@ -29,7 +29,6 @@ class Home extends Component {
     base.auth().signOut().catch(function(err) {
 
     }).then(function() {
-      // browserHistory.push('/');
       this.props.navigator.push({
         component: Login,
         title: '',

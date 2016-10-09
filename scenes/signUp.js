@@ -10,7 +10,8 @@ import Welcome from './welcome';
 import db from '../dbConfig';
 import superagent from 'superagent';
 var Platform = require('react-native').Platform;
-// var ImagePicker = require('react-native-image-picker');
+import { RNS3 } from 'react-native-aws3';
+import s3 from '../db';
 import ImagePicker from 'react-native-image-picker';
 
 var Form = t.form.Form;
@@ -30,7 +31,7 @@ class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      avatarSource: ''
+      img_url: null
     }
     this.onPress = this.onPress.bind(this);
     this.upload = this.upload.bind(this);
@@ -65,7 +66,7 @@ class SignUp extends Component {
         }
 
         this.setState({
-          avatarSource: source
+          img_url: source
         });
       }
     });
@@ -91,28 +92,51 @@ class SignUp extends Component {
       if(error){
         AlertIOS.alert(error.message);
       }
-    }).then(function(user) {
+    }).then((user) => {
       if(!user) {
         return;
       } else {
 
-        let data = {
-          firstName: value.firstName,
-          lastName: value.lastName,
-          email: value.email
-        }
+        let file = {
+            uri: this.state.image,
+            name: value.email + "/image.jpeg",
+            type: "image/jpeg"
+          }
 
-        superagent
-          .post(db.url + '/users')
-          .send(data)
-          .end((err, res) => {
-            if(err) {
-              console.log('error.....', err)
-              AlertIOS.alert('Error signing up', 'Make sure your email is valid.')
-            } else {
-              navigate(res.body)
-            }
-          });
+          let options = {
+            keyPrefix: "images/",
+            bucket: "wishlistgriffith",
+            region: "us-east-1",
+            accessKey: s3.access_key,
+            secretKey: s3.secret_key,
+            successActionStatus: 201
+          }
+
+          RNS3.put(file, options)
+            .then(response => {
+              console.log('response: ', response)
+
+              let data = {
+                firstName: value.firstName,
+                lastName: value.lastName,
+                email: value.email,
+                img_url: response.body.postResponse.location
+              }
+
+              superagent
+                .post(db.url + '/users')
+                .send(data)
+                .end((err, res) => {
+                  if(err) {
+                    console.log('error.....', err)
+                    AlertIOS.alert('Error signing up', 'Make sure your email is valid.')
+                  } else {
+                    navigate(res.body)
+                  }
+                });
+            })
+            .catch(err => console.log('error: ', err))
+
       }
     })
   }

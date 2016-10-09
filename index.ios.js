@@ -8,7 +8,7 @@ import {
   StatusBar,
   NavigatorIOS,
   TouchableOpacity,
-  AlertIOS
+  AlertIOS,
 } from 'react-native';
 import base from './config';
 import Login from './scenes/login'
@@ -18,6 +18,7 @@ class wishlist extends Component {
     super(props);
 
     this.logOut = this.logOut.bind(this);
+    this.goHome = this.goHome.bind(this);
   }
 
   // static propTypes = {
@@ -38,6 +39,16 @@ class wishlist extends Component {
     })
   }
 
+  goHome() {
+    this.refs.nav.push({
+      component: Login,
+      title: '',
+      passProps: {
+
+      }
+    })
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -55,6 +66,10 @@ class wishlist extends Component {
       />
       <TouchableOpacity onPress={this.logOut} style={{position: 'absolute', right: 5, bottom: 5, backgroundColor: '#fff', flex: 0 }}>
         <Text>Log Out</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={this.goHome} style={{position: 'absolute', left: 5, bottom: 5, backgroundColor: '#fff', flex: 0 }}>
+        <Text>Home</Text>
       </TouchableOpacity>
       </View>
     );

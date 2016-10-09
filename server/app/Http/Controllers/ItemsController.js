@@ -7,7 +7,9 @@ const Database = use('Database');
 
 class ItemsController {
   * index (request, response) {
-    const user = yield User.find(request.param('id'));
+    let data = request.all();
+    console.log('data: ', data)
+    const user = yield User.find(data.friend.profile_id);
     const items = yield user.items().fetch();
     console.log('the items: ', items)
     const itemsJson = items.toJSON();

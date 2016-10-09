@@ -7,6 +7,7 @@ import superagent from 'superagent';
 import db from '../dbConfig';
 import base from '../config';
 import Login from './login';
+import FriendView from './friendView';
 
 class Friends extends Component {
   constructor(props) {
@@ -25,6 +26,7 @@ class Friends extends Component {
     this.getFriends = this.getFriends.bind(this);
     this.confirmFriend = this.confirmFriend.bind(this);
     this.logOut = this.logOut.bind(this);
+    this.goToFriend = this.goToFriend.bind(this);
   }
 
   componentWillMount() {
@@ -32,7 +34,7 @@ class Friends extends Component {
   }
 
   confirmFriend(friend) {
-    
+
     console.log('tha friend: ', friend)
     let data = {
       user: this.props.user,
@@ -70,6 +72,18 @@ class Friends extends Component {
       })
   }
 
+  goToFriend(friend) {
+    this.props.navigator.push({
+      component: FriendView,
+      title: '',
+      passProps: {
+        user: this.props.user,
+        navigator: this.props.navigator,
+        friend: friend
+      }
+    })
+  }
+
   onPress() {
     this.props.navigator.push({
       component: FindFriends,
@@ -85,6 +99,7 @@ class Friends extends Component {
     console.log('founda frind: ', item)
     return (
       <View style={{ backgroundColor: '#EEE', height: 80, padding: 5, flexDirection: 'row' }}>
+        <TouchableOpacity onPress={this.goToFriend.bind(null, item)} style={{ height: 80, flexDirection: 'row' }}>
         <Image
            style={{width: 50, height: 50, borderRadius: 5 }}
            source={{uri: item.img_url ? item.img_url : 'http://lorempixel.com/200/200' }}
@@ -92,7 +107,7 @@ class Friends extends Component {
          <View style={{ padding: 20, width: 150 }}>
             <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
          </View>
-
+         </TouchableOpacity>
       </View>
     );
   }
