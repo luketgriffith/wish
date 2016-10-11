@@ -17,7 +17,7 @@ class Welcome extends Component {
     super(props);
 
     this.state = {
-      user: this.props.user
+      user: null
     }
   }
 
@@ -25,23 +25,32 @@ class Welcome extends Component {
     navigator: PropTypes.object.isRequired,
   }
 
-  componentWillMount() {
-    let user = { email: this.state.user.email };
-    superagent
-      .post(db.url + '/getUser')
-      .send(user)
-      .end((err, res) => {
-        if(err) {
-          console.log(err)
-        } else {
-          console.log('getting user...', res.body)
-          let newUser = res.body[0];
-          this.setState({
-            user: newUser
-          });
-        }
-      });
-  }
+
+  // componentWillReceiveProps(props) {
+  //   console.log('props.user', props)
+  //   if(props.user) {
+  //     this.setState({
+  //       user: props.user
+  //     });
+  //
+  //     let user = { email: props.user.email };
+  //     superagent
+  //       .post(db.url + '/getUser')
+  //       .send(user)
+  //       .end((err, res) => {
+  //         if(err) {
+  //           console.log(err)
+  //         } else {
+  //           console.log('getting user...', res.body)
+  //           let newUser = res.body[0];
+  //           this.setState({
+  //             user: newUser
+  //           });
+  //         }
+  //       });
+  //
+  //   }
+  // }
 
   render() {
     const styles = StyleSheet.create({
@@ -54,13 +63,13 @@ class Welcome extends Component {
     })
     let content;
 
-    if(this.state.user && this.state.user.id) {
+    if(this.props.user) {
       content = (
         <View>
         <ScrollableTabView locked={true}>
-          <Home tabLabel="Camera" user={this.state.user} navigator={this.props.navigator}/>
-          <Friends tabLabel="Friends" user={this.state.user} navigator={this.props.navigator}/>
-          <List tabLabel="List" user={this.state.user} navigator={this.props.navigator}/>
+          <Home tabLabel="Camera" user={this.props.user} navigator={this.props.navigator}/>
+          <Friends tabLabel="Friends" user={this.props.user} navigator={this.props.navigator}/>
+          <List tabLabel="List" user={this.props.user} navigator={this.props.navigator}/>
         </ScrollableTabView>
         </View>
       )

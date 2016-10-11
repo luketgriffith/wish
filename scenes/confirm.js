@@ -44,7 +44,7 @@ class Confirm extends Component {
   confirm() {
     let file = {
         uri: this.props.image,
-        name: this.props.user.email + "/image.jpeg",
+        name: this.props.user.email + '/' + Date.now().toString() + "/image.jpeg",
         type: "image/jpeg"
       }
 

@@ -1,7 +1,7 @@
 'use strict';
 var RNUploader = require('NativeModules').RNUploader;
 import React, { Component, PropTypes } from 'react'
-import { View, TouchableHighlight, StyleSheet, Text, PanResponder, AlertIOS } from 'react-native';
+import { View, TouchableHighlight, StyleSheet, Text, PanResponder, AlertIOS, Image } from 'react-native';
 import SimpleGesture from 'react-native-simple-gesture';
 var t = require('tcomb-form-native');
 import styles from './styles';
@@ -74,24 +74,15 @@ class SignUp extends Component {
 
 
   onPress() {
-    let navigate = (user) => {
-      this.props.navigator.push({
-        component: Welcome,
-        title: '',
-        passProps: {
-          user: user
-        }
-      });
-    }
-
     var value = this.refs.form.getValue();
-    base.auth().createUserWithEmailAndPassword(value.email, value.password).catch(function(error) {
+    base.auth().createUserWithEmailAndPassword(value.email, value.password).catch((error) => {
 
       var errorCode = error.code;
       var errorMessage = error.message;
       if(error){
         AlertIOS.alert(error.message);
       }
+
     }).then((user) => {
       if(!user) {
         return;
@@ -131,7 +122,15 @@ class SignUp extends Component {
                     console.log('error.....', err)
                     AlertIOS.alert('Error signing up', 'Make sure your email is valid.')
                   } else {
-                    navigate(res.body)
+                    console.log('sign up res...', res.body)
+                    this.props.navigator.push({
+                      component: Welcome,
+                      title: '',
+                      passProps: {
+                        user: res.body,
+                        navigator: this.props.navigator
+                      }
+                    });
                   }
                 });
             })
@@ -142,6 +141,12 @@ class SignUp extends Component {
   }
 
   render() {
+    let image;
+    if(this.state.img_url) {
+      image = <Image source={this.state.img_url} style={{ height: 200, width: 200 }} />
+    } else {
+      image = <Text>No Image Selected</Text>
+    }
 
     let options = {
           fields: {
@@ -158,6 +163,7 @@ class SignUp extends Component {
         type={User}
         options={options}
       />
+      {image}
       <TouchableHighlight style={styles.button} onPress={this.upload} underlayColor='#99d9f4'>
         <Text style={styles.buttonText}>Choose Profile Photo</Text>
       </TouchableHighlight>

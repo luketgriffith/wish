@@ -11,7 +11,8 @@ import {
   AlertIOS,
 } from 'react-native';
 import base from './config';
-import Login from './scenes/login'
+import Login from './scenes/login';
+import Welcome from './scenes/welcome';
 
 class wishlist extends Component {
   constructor(props) {

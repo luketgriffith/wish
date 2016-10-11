@@ -12,6 +12,7 @@ import Friends from './friends';
 import List from './list';
 import SignUp from './signUp';
 import styles from './styles';
+import db from '../dbConfig';
 var ScrollableTabView = require('react-native-scrollable-tab-view');
 
 
@@ -40,15 +41,26 @@ class Login extends Component {
   componentWillMount() {
     base.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log('wheeee user', user)
+        superagent
+          .post(db.url + '/getUser')
+          .send(user)
+          .end((err, res) => {
+            if(err) {
+              console.log(err)
+            } else {
+              console.log('getting user...', res.body)
+              let newUser = res.body[0];
+              this.props.navigator.push({
+                component: Welcome,
+                title: '',
+                passProps: {
+                  user: user
+                },
+              });
+            }
+          });
         // User is signed in.
-        this.props.navigator.push({
-          component: Welcome,
-          title: '',
-          passProps: {
-            user: user
-          },
-        });
+
 
       } else {
         // No user is signed in.
