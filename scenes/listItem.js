@@ -6,7 +6,7 @@ import Welcome from './welcome';
 class ListItem extends Component {
   render() {
     return (
-      <TouchableHighlight>
+      <TouchableHighlight onPress={this.props.onPress}>
         <View style={{ flexDirection: 'row', backgroundColor: '#A0DDFF', padding: 5, justifyContent: 'center', alignItems: 'center' }}>
           <Image
             style={{width: 60, height: 60}}

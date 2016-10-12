@@ -20,15 +20,17 @@ class SingleItem extends Component {
 
   render() {
     return (
-      <View style={{ padding: 10, paddingTop: 60, flexDirection: 'column' }}>
-      <TouchableOpacity onPress={this.back} style={{ position: 'absolute', top: 5, left: 5 }}>
+      <View style={{ padding: 10, paddingTop: 80, flexDirection: 'column' }}>
+      <TouchableOpacity onPress={this.back} style={{ position: 'absolute', top: 15, left: 5 }}>
         <Text>Back</Text>
       </TouchableOpacity>
-      <Image
-        style={{width: 200, height: 400}}
-        source={{ uri: this.props.item.img_url }}
-      />
-      <Text>{this.props.item.description}</Text>
+      <View style={{ flex: 1, padding: 10 }}>
+        <Image
+          style={{ flex: 1, height: 400 }}
+          source={{ uri: this.props.item.img_url }}
+        />
+        <Text>{this.props.item.description}</Text>
+        </View>
       </View>
     );
   }
