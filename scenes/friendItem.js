@@ -13,11 +13,23 @@ import db from '../dbConfig';
 class FriendItem extends Component {
   constructor(props) {
     super(props);
-
+    
+    this.state = {
+      claimed: false
+    }
+    
     this.claim = this.claim.bind(this);
     this.claimPrompt = this.claimPrompt.bind(this);
   }
-
+  
+  componentWillReceiveProps(props) {
+    if(props.item.claimed) {
+      this.setState({
+        claimed: true
+      })
+    }
+  }
+  
   claimPrompt() {
     AlertIOS.alert(
       'Claim this gift?',
@@ -31,6 +43,25 @@ class FriendItem extends Component {
 
   claim() {
     console.log('claiming gift....')
+    
+    let data = {
+      item: this.props.item,
+      user: this.props.user
+    }
+    
+    superagent
+      .post(db.url + '/claimGift')
+      .send(data)
+      .end((err, res) => {
+        if(err) {
+          console.log(err)
+        } else {
+          console.log(res.body);
+          this.setState({
+            claimed: true
+          });
+        }
+      })
   }
 
   render() {

@@ -89,9 +89,9 @@ class Confirm extends Component {
   render() {
     console.log(this.props);
     return(
-      <View style={{ padding: 100 }}>
+      <View style={{ padding: 10, paddingTop: 50, flex: 1, flexDirection: 'column' }}>
         <Image
-          style={{width: 300, height: 500}}
+          style={{ flex: 1, height: 300}}
            source={{ uri: this.props.image }}
          />
          <TextInput
