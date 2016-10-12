@@ -6,7 +6,7 @@ import styles from './styles';
 import base from '../config';
 import ListItem from './listItem';
 import SingleItem from './singleItem';
-import fetch from 'isomorphic-fetch';
+// import fetch from 'isomorphic-fetch';
 import superagent from 'superagent';
 import db from '../dbConfig';
 

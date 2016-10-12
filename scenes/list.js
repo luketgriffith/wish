@@ -6,7 +6,7 @@ import styles from './styles';
 import base from '../config';
 import ListItem from './listItem';
 import SingleItem from './singleItem';
-import fetch from 'isomorphic-fetch';
+// import fetch from 'isomorphic-fetch';
 import superagent from 'superagent';
 import db from '../dbConfig';
 import Swipeout from 'react-native-swipeout';
@@ -35,18 +35,16 @@ class List extends Component {
   }
 
   fetchItems() {
-    fetch(db.url + '/myItems/' + this.props.user.id)
-        .then((response) => {
-          if (response.status >= 400) {
-              throw new Error("Bad response from server");
-          }
-          return response.json();
-      })
-      .then((stories) => {
-        console.log('the stuff: ', stories)
+    superagent
+      .get(db.url + '/myItems/' + this.props.user.id)
+      .end((err, res) => {
+        if(err) {
+          console.log(err)
+        } else {
           this.setState({
-              items: this.state.items.cloneWithRows(stories)
+              items: this.state.items.cloneWithRows(res.body)
           });
+        }
       });
   }
 
