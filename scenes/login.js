@@ -14,7 +14,7 @@ import SignUp from './signUp';
 import styles from './styles';
 import db from '../dbConfig';
 var ScrollableTabView = require('react-native-scrollable-tab-view');
-
+import superagent from 'superagent';
 
 
 var Form = t.form.Form;
@@ -41,9 +41,10 @@ class Login extends Component {
   componentWillMount() {
     base.auth().onAuthStateChanged((user) => {
       if (user) {
+        console.log('still logged in...', user)
         superagent
           .post(db.url + '/getUser')
-          .send(user)
+          .send({ email: user.email })
           .end((err, res) => {
             if(err) {
               console.log(err)
@@ -54,7 +55,7 @@ class Login extends Component {
                 component: Welcome,
                 title: '',
                 passProps: {
-                  user: user
+                  user: newUser
                 },
               });
             }
@@ -85,13 +86,24 @@ class Login extends Component {
         console.log('the data...', data)
         //set a cookie or something
         if(data) {
-          this.props.navigator.push({
-            component: Welcome,
-            title: '',
-            passProps: {
-              user: data
-            },
-          });
+          superagent
+            .post(db.url + '/getUser')
+            .send({ email: data.email })
+            .end((err, res) => {
+              if(err) {
+                console.log(err)
+              } else {
+                console.log('getting user...', res.body)
+                let newUser = res.body[0];
+                this.props.navigator.push({
+                  component: Welcome,
+                  title: '',
+                  passProps: {
+                    user: newUser
+                  },
+                });
+              }
+            });
         }
       })
     }
