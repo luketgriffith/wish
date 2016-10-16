@@ -1,4 +1,4 @@
-
+'use strict'
 import React, { Component, PropTypes } from 'react';
 import {
   AppRegistry,
@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import base from './config';
 import Login from './scenes/login';
-import Welcome from './scenes/welcome';
+
 
 class wishlist extends Component {
   constructor(props) {

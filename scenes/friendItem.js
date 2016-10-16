@@ -13,23 +13,15 @@ import db from '../dbConfig';
 class FriendItem extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       claimed: false
     }
-    
+
     this.claim = this.claim.bind(this);
     this.claimPrompt = this.claimPrompt.bind(this);
   }
-  
-  componentWillReceiveProps(props) {
-    if(props.item.claimed) {
-      this.setState({
-        claimed: true
-      })
-    }
-  }
-  
+
   claimPrompt() {
     AlertIOS.alert(
       'Claim this gift?',
@@ -42,13 +34,11 @@ class FriendItem extends Component {
   }
 
   claim() {
-    console.log('claiming gift....')
-    
     let data = {
       item: this.props.item,
       user: this.props.user
     }
-    
+
     superagent
       .post(db.url + '/claimGift')
       .send(data)
@@ -56,7 +46,7 @@ class FriendItem extends Component {
         if(err) {
           console.log(err)
         } else {
-          console.log(res.body);
+          console.log('claiming response...', res.body);
           this.setState({
             claimed: true
           });
@@ -65,6 +55,16 @@ class FriendItem extends Component {
   }
 
   render() {
+    let claim;
+    if(this.state.claimed || this.props.item.claimed) {
+      claim = <View><Text>This gift has already been claimed!</Text></View>
+    } else {
+      claim = (
+        <TouchableOpacity onPress={this.claimPrompt}>
+          <Text>Claim This Gift!</Text>
+        </TouchableOpacity>
+      )
+    }
     return(
       <View style={{ flex: 1, padding: 10 }}>
         <Image
@@ -72,9 +72,7 @@ class FriendItem extends Component {
           style={{ width: 400, height: 400 }}
         />
         <Text>{this.props.item.description}</Text>
-        <TouchableOpacity onPress={this.claimPrompt}>
-          <Text>Claim This Gift!</Text>
-        </TouchableOpacity>
+        {claim}
       </View>
     )
   }

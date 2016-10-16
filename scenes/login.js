@@ -1,8 +1,7 @@
-
 'use strict';
 
 import React, { Component, PropTypes } from 'react'
-import { View, TouchableHighlight, StyleSheet, Text, PanResponder } from 'react-native';
+import { View, TouchableHighlight, StyleSheet, Text, PanResponder, AlertIOS } from 'react-native';
 import SimpleGesture from 'react-native-simple-gesture';
 var t = require('tcomb-form-native');
 import base from '../config';
@@ -19,9 +18,8 @@ import superagent from 'superagent';
 
 var Form = t.form.Form;
 
-// here we are: define your domain model
 var User = t.struct({
-  email: t.String,              // a required string
+  email: t.String,
   password: t.String
 });
 
@@ -32,15 +30,29 @@ class Login extends Component {
       auth: false,
       signUp: false
     }
-    this.toggleSignUp = this.toggleSignUp.bind(this)
+    this.toggleSignUp = this.toggleSignUp.bind(this);
     this.onPress = this.onPress.bind(this);
   }
 
-
+  static propTypes = {
+    navigator: PropTypes.object.isRequired,
+  }
 
   componentWillMount() {
+    let navigate = (user) => {
+      console.log('navigate....', this.props.navigator)
+      this.props.navigator.push({
+        component: Welcome,
+        title: '',
+        passProps: {
+          navigator: this.props.navigator,
+          user: user,
+        },
+      });
+    }
+    console.log('wat login thing')
     base.auth().onAuthStateChanged((user) => {
-      if (user) {
+      if(user) {
         console.log('still logged in...', user)
         superagent
           .post(db.url + '/getUser')
@@ -49,22 +61,20 @@ class Login extends Component {
             if(err) {
               console.log(err)
             } else {
-              console.log('getting user...', res.body)
+              // console.log('getting user...', res.body)
               let newUser = res.body[0];
-              this.props.navigator.push({
-                component: Welcome,
-                title: '',
-                passProps: {
-                  user: newUser
-                },
-              });
+              console.log(newUser)
+              navigate(newUser);
             }
           });
-        // User is signed in.
-
-
       } else {
-        // No user is signed in.
+        AlertIOS.alert(
+          'Error Logging In',
+          'Please check your email and password and try again.',
+         [
+           {text: 'OK', onPress: () => console.log('Cancel Pressed'), style: 'cancel'}
+         ],
+        )
       }
     });
 
@@ -109,9 +119,6 @@ class Login extends Component {
     }
   }
 
-  static propTypes = {
-    navigator: PropTypes.object.isRequired,
-  }
 
   toggleSignUp() {
     this.props.navigator.push({
@@ -124,7 +131,6 @@ class Login extends Component {
   }
 
   render() {
-
     let options = {
           fields: {
             password: {

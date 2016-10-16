@@ -10,7 +10,7 @@ import SignUp from './signUp';
 import styles from './styles';
 import superagent from 'superagent';
 import db from '../dbConfig';
-import ScrollableTabView, { ScrollableTabBar, } from 'react-native-scrollable-tab-view';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 class Welcome extends Component {
   constructor(props) {
@@ -25,32 +25,6 @@ class Welcome extends Component {
     navigator: PropTypes.object.isRequired,
   }
 
-
-  // componentWillReceiveProps(props) {
-  //   console.log('props.user', props)
-  //   if(props.user) {
-  //     this.setState({
-  //       user: props.user
-  //     });
-  //
-  //     let user = { email: props.user.email };
-  //     superagent
-  //       .post(db.url + '/getUser')
-  //       .send(user)
-  //       .end((err, res) => {
-  //         if(err) {
-  //           console.log(err)
-  //         } else {
-  //           console.log('getting user...', res.body)
-  //           let newUser = res.body[0];
-  //           this.setState({
-  //             user: newUser
-  //           });
-  //         }
-  //       });
-  //
-  //   }
-  // }
 
   render() {
     const styles = StyleSheet.create({
