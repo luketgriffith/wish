@@ -15,11 +15,12 @@ class FriendItem extends Component {
     super(props);
 
     this.state = {
-      claimed: false
+      item: this.props.item
     }
 
     this.claim = this.claim.bind(this);
     this.claimPrompt = this.claimPrompt.bind(this);
+    this.releasePrompt = this.releasePrompt.bind(this);
   }
 
   claimPrompt() {
@@ -28,13 +29,42 @@ class FriendItem extends Component {
       'This will make it unavailable for other friends to buy for this person.',
      [
        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-       {text: 'Claim!', onPress: this.claim }
+       {text: 'Claim!', onPress: this.claim.bind(null, true) }
      ],
     )
   }
 
-  claim() {
+  releasePrompt() {
+    AlertIOS.alert(
+      'Release this gift?',
+      'This will make it available for other friends to buy for this person.',
+     [
+       {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+       {text: 'Release', onPress: this.claim.bind(null, false) }
+     ],
+    )
+  }
+
+  componentWillMount() {
+    if(this.props.item) {
+      superagent
+        .get(db.url + '/singleItem/' + this.props.item.id)
+        .end((err, res) => {
+          if(err) {
+            console.log(err)
+          } else {
+            console.log('gotta item: ', res.body)
+            this.setState({
+              item: res.body
+            })
+          }
+        })
+    }
+  }
+
+  claim(bool) {
     let data = {
+      claim: bool,
       item: this.props.item,
       user: this.props.user
     }
@@ -48,7 +78,7 @@ class FriendItem extends Component {
         } else {
           console.log('claiming response...', res.body);
           this.setState({
-            claimed: true
+            item: res.body
           });
         }
       })
@@ -56,8 +86,26 @@ class FriendItem extends Component {
 
   render() {
     let claim;
-    if(this.state.claimed || this.props.item.claimed) {
-      claim = <View><Text>This gift has already been claimed!</Text></View>
+    let release;
+    console.log('the state...', this.state)
+    if(this.state.item.claimed && this.state.item.claimed_by === this.props.user.id) {
+      release = (
+        <View>
+          <TouchableOpacity onPress={this.releasePrompt}>
+            <Text>Release Gift</Text>
+          </TouchableOpacity>
+        </View>
+      )
+    } else {
+      release = null;
+    }
+    if(this.state.item && this.state.item.claimed) {
+      claim = (
+              <View>
+                <Text>This gift has already been claimed!</Text>
+                {release}
+              </View>
+            )
     } else {
       claim = (
         <TouchableOpacity onPress={this.claimPrompt}>
@@ -68,10 +116,10 @@ class FriendItem extends Component {
     return(
       <View style={{ flex: 1, padding: 10 }}>
         <Image
-          source={{ uri: this.props.item.img_url }}
+          source={{ uri: this.state.item.img_url }}
           style={{ width: 400, height: 400 }}
         />
-        <Text>{this.props.item.description}</Text>
+        <Text>{this.state.item.description}</Text>
         {claim}
       </View>
     )
