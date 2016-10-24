@@ -21,6 +21,7 @@ class FriendItem extends Component {
     this.claim = this.claim.bind(this);
     this.claimPrompt = this.claimPrompt.bind(this);
     this.releasePrompt = this.releasePrompt.bind(this);
+    this.back = this.back.bind(this);
   }
 
   claimPrompt() {
@@ -43,6 +44,10 @@ class FriendItem extends Component {
        {text: 'Release', onPress: this.claim.bind(null, false) }
      ],
     )
+  }
+
+  back() {
+    this.props.navigator.pop(0);
   }
 
   componentWillMount() {
@@ -121,6 +126,9 @@ class FriendItem extends Component {
         />
         <Text>{this.state.item.description}</Text>
         {claim}
+        <TouchableOpacity onPress={this.back}>
+          <Text>Back</Text>
+        </TouchableOpacity>
       </View>
     )
   }

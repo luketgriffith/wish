@@ -11,25 +11,21 @@ class SingleItem extends Component {
   }
 
   back() {
-    this.props.navigator.push({
-      component: Welcome,
-      title: '',
-      passProps: {}
-    });
+    this.props.navigator.pop(0);
   }
 
   render() {
     return (
       <View style={{ padding: 10, paddingTop: 80, flexDirection: 'column' }}>
-      <TouchableOpacity onPress={this.back} style={{ position: 'absolute', top: 15, left: 5 }}>
-        <Text>Back</Text>
-      </TouchableOpacity>
       <View style={{ flex: 1, padding: 10 }}>
         <Image
           style={{ flex: 1, height: 400 }}
           source={{ uri: this.props.item.img_url }}
         />
         <Text>{this.props.item.description}</Text>
+        <TouchableOpacity onPress={this.back} style={{ position: 'absolute', top: 15, left: 5 }}>
+          <Text>Back</Text>
+        </TouchableOpacity>
         </View>
       </View>
     );

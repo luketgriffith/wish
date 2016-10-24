@@ -153,7 +153,7 @@ class wishlist extends Component {
     return (
       <View style={{ flex: 1 }}>
       {wat}
-      <TouchableOpacity onPress={this.logOut} style={{position: 'absolute', right: 5, top: 5, backgroundColor: '#fff', flex: 0 }}>
+      <TouchableOpacity onPress={this.logOut} style={{position: 'absolute', right: 5, top: 10, backgroundColor: '#fff', flex: 0 }}>
         <Text>Log Out</Text>
       </TouchableOpacity>
 
