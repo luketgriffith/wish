@@ -106,14 +106,7 @@ class wishlist extends Component {
   }
 
   goCamera() {
-    this.refs.nav.push({
-      component: Home,
-      title: '',
-      passProps: {
-        user: this.state.user
-        // navigator: this.refs.nav
-      }
-    })
+    this.refs.nav.popToTop(0)
   }
 
   render() {

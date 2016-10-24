@@ -33,13 +33,7 @@ class Confirm extends Component {
   }
 
   cancel() {
-    this.props.navigator.push({
-      component: Home,
-      title: '',
-      passProps: {
-        user: this.props.user
-      }
-    })
+    this.props.navigator.pop(0)
   }
 
   confirm() {
@@ -73,13 +67,7 @@ class Confirm extends Component {
               if(err) {
                 console.log(err);
               } else {
-                this.props.navigator.push({
-                  component: Home,
-                  title: '',
-                  passProps: {
-                    user: this.props.user
-                  }
-                })
+                this.props.navigator.pop(0);
               }
             })
         })
