@@ -30,12 +30,11 @@ class wishlist extends Component {
     }
 
     this.logOut = this.logOut.bind(this);
-    this.goHome = this.goHome.bind(this);
+    // this.goHome = this.goHome.bind(this);
   }
 
-
   componentWillMount() {
-    console.log('here we go')
+    console.log('HERE WE GO')
     base.auth().onAuthStateChanged((user) => {
       if(user) {
         console.log('still logged in...', user)
@@ -77,21 +76,12 @@ class wishlist extends Component {
         component: Login,
         title: '',
         passProps: {
-
+          navigator: this.refs.nav
         }
       })
     })
   }
 
-  goHome() {
-    this.refs.nav.push({
-      component: Login,
-      title: '',
-      passProps: {
-
-      }
-    })
-  }
 
   goFriends() {
     this.refs.nav.push({
@@ -120,25 +110,24 @@ class wishlist extends Component {
       component: Home,
       title: '',
       passProps: {
-        user: this.state.user,
-        navigator: this.refs.nav
+        user: this.state.user
+        // navigator: this.refs.nav
       }
     })
   }
 
   render() {
-    console.log(this.state)
     let wat;
     if(this.state.userStatus === "success" && this.state.user) {
-      console.log('meow')
+
       wat = (
         <NavigatorIOS
           ref='nav'
           initialRoute={{
             component: Home,
             passProps: {
-              user: this.state.user,
-              navigator: this.refs.nav
+              user: this.state.user
+              // navigator: this.refs.nav
             },
             title: 'Turnt'
           }}

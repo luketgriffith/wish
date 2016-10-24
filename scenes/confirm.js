@@ -18,6 +18,7 @@ import Camera from 'react-native-camera';
 import { RNS3 } from 'react-native-aws3';
 import s3 from '../db';
 import Welcome from './welcome';
+import Home from './home';
 import superagent from 'superagent';
 import db from '../dbConfig';
 
@@ -33,7 +34,7 @@ class Confirm extends Component {
 
   cancel() {
     this.props.navigator.push({
-      component: Welcome,
+      component: Home,
       title: '',
       passProps: {
         user: this.props.user
@@ -73,7 +74,7 @@ class Confirm extends Component {
                 console.log(err);
               } else {
                 this.props.navigator.push({
-                  component: Welcome,
+                  component: Home,
                   title: '',
                   passProps: {
                     user: this.props.user
@@ -83,7 +84,6 @@ class Confirm extends Component {
             })
         })
         .catch(err => console.log('error: ', err))
-
   }
 
   render() {
@@ -91,7 +91,7 @@ class Confirm extends Component {
     return(
       <View style={{ padding: 10, paddingTop: 50, flex: 1, flexDirection: 'column' }}>
         <Image
-          style={{ flex: 1, height: 300 }}
+          style={{ flex: 1, height: 200 }}
           source={{ uri: this.props.image }}
          />
          <TextInput

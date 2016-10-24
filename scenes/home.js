@@ -19,27 +19,9 @@ import Confirm from './confirm';
 
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-
-    this.logOut = this.logOut.bind(this);
-  }
-
-  logOut() {
-    base.auth().signOut().catch(function(err) {
-
-    }).then(function() {
-      this.props.navigator.push({
-        component: Login,
-        title: '',
-        passProps: {
-
-        }
-      })
-    });
-  }
 
   render() {
+    console.log('rendering home....', this.props)
     const styles = StyleSheet.create({
       container: {
         flex: 1
