@@ -78,22 +78,22 @@ class Confirm extends Component {
     console.log(this.props);
     return(
       <View style={{ padding: 10, paddingTop: 20, flex: 1, flexDirection: 'column' }}>
-        <View style={{ flex: 1, padding: 20, paddingBottom: 40 }}>
+        <View style={{ flex: 1, padding: 0, paddingBottom: 40 }}>
           <Image
             style={{ flex: 1, height: 200 }}
             source={{ uri: this.props.image }}
            />
            <TextInput
-             style={{height: 40, borderColor: 'gray', borderWidth: 1, position: 'absolute', top: 30, width: 300, flex: 1, left: 0 }}
+             style={{height: 40, backgroundColor: 'black', color: 'white', borderColor: 'gray', borderWidth: 1, position: 'absolute', top: 30, width: 315, flex: 1, left: 20 }}
              onChangeText={(text) => this.setState({text: text})}
              value={this.state.text}
            />
            <View style={{ flexDirection: 'row', position: 'absolute', bottom: 40 }}>
-             <TouchableOpacity onPress={this.confirm} style={{ flex: .5 }}>
-               <Text>Confirm</Text>
-             </TouchableOpacity>
              <TouchableOpacity onPress={this.cancel} style={{ flex: .5 }}>
-               <Text>Cancel</Text>
+               <Text style={{ textAlign: 'left' }}>Cancel</Text>
+             </TouchableOpacity>
+             <TouchableOpacity onPress={this.confirm} style={{ flex: .5 }}>
+              <Text style={{ textAlign: 'right' }}>Confirm</Text>
              </TouchableOpacity>
            </View>
          </View>
