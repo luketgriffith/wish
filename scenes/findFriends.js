@@ -38,7 +38,7 @@ class FindFriends extends Component {
 
   onSearch() {
     let data = {
-      term: this.state.text,
+      term: this.state.text.toLowerCase(),
       user: this.props.user.id
     };
 

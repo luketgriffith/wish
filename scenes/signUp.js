@@ -75,7 +75,7 @@ class SignUp extends Component {
 
   onPress() {
     var value = this.refs.form.getValue();
-    base.auth().createUserWithEmailAndPassword(value.email, value.password).catch((error) => {
+    base.auth().createUserWithEmailAndPassword(value.email.toLowerCase(), value.password).catch((error) => {
 
       var errorCode = error.code;
       var errorMessage = error.message;
@@ -108,9 +108,9 @@ class SignUp extends Component {
               console.log('response: ', response)
 
               let data = {
-                firstName: value.firstName,
-                lastName: value.lastName,
-                email: value.email,
+                firstName: value.firstName.toLowerCase(),
+                lastName: value.lastName.toLowerCase(),
+                email: value.email.toLowerCase(),
                 img_url: response.body.postResponse.location
               }
 
