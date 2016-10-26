@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   AlertIOS,
 } from 'react-native';
+ import { Container, Header, Title, Content, Footer, FooterTab, Button, Icon, Spinner } from 'native-base';
 import base from './config';
 import Login from './scenes/login';
 import Loader from './scenes/loader';
@@ -147,7 +148,7 @@ class wishlist extends Component {
         />
       )
     } else {
-      wat = <Loader />
+      wat = <Content><Spinner color="red"/></Content>
     }
 
     return (
@@ -157,18 +158,29 @@ class wishlist extends Component {
         <Text>Log Out</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={this.goFriends.bind(this)} style={{position: 'absolute', left: 5, bottom: 5, backgroundColor: '#fff', flex: 0 }}>
-        <Text>Friends</Text>
-      </TouchableOpacity>
+      <Footer>
+        <FooterTab>
+            <Button onPress={this.goFriends.bind(this)}>
+                Friends
+            </Button>
+        </FooterTab>
 
-      <TouchableOpacity onPress={this.goCamera.bind(this)} style={{position: 'absolute', left: 200, bottom: 5, backgroundColor: '#fff', flex: 0 }}>
-        <Text>Camera</Text>
-      </TouchableOpacity>
+        <FooterTab>
+          <Button onPress={this.goCamera.bind(this)}>
 
+            Camera
 
-      <TouchableOpacity onPress={this.goList.bind(this)} style={{position: 'absolute', right: 5, bottom: 5, backgroundColor: '#fff', flex: 0 }}>
-        <Text>List</Text>
-      </TouchableOpacity>
+          </Button>
+        </FooterTab>
+
+        <FooterTab>
+          <Button onPress={this.goList.bind(this)}>
+
+              List
+
+          </Button>
+        </FooterTab>
+      </Footer>
       </View>
     );
   }

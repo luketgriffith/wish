@@ -9,6 +9,7 @@ import {
   Dimensions,
   TouchableOpacity
  } from 'react-native';
+import { Container, Header, Title, Content, Footer, FooterTab, Button, Icon } from 'native-base';
 var t = require('tcomb-form-native');
 // import ReadImageData from 'react-native-asset-library-to-base64';
 import base from '../config';
@@ -33,28 +34,47 @@ class Home extends Component {
         height: Dimensions.get('window').height,
         width: Dimensions.get('window').width
       },
+      captureDiv: {
+        position: 'absolute',
+        bottom: 150,
+        flex: 1,
+        width: Dimensions.get('window').width,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        backgroundColor: 'transparent'
+      },
       capture: {
-        flex: 0,
-        backgroundColor: '#fff',
-        borderRadius: 5,
-        color: '#000',
-        padding: 10,
-        margin: 40
+        width: 70,
+        height: 50,
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        borderColor: 'white',
+        borderRadius: 7
       }
     });
 
     return (
-      <View style={styles.container}>
-        <Camera
-          captureTarget={Camera.constants.CaptureTarget.disk}
-          ref={(cam) => {
-            this.camera = cam;
-          }}
-          style={styles.preview}
-          aspect={Camera.constants.Aspect.fill}>
-          <Text style={styles.capture} onPress={this.takePicture.bind(this)}>[CAPTURE]</Text>
-        </Camera>
-      </View>
+      <Container>
+               <Header>
+                   <Title>Header</Title>
+               </Header>
+
+               <Content>
+               <View style={styles.container}>
+                 <Camera
+                   captureTarget={Camera.constants.CaptureTarget.disk}
+                   ref={(cam) => {
+                     this.camera = cam;
+                   }}
+                   style={styles.preview}
+                   aspect={Camera.constants.Aspect.fill}>
+                    <TouchableOpacity style={styles.captureDiv} onPress={this.takePicture.bind(this)}>
+                      <View style={styles.capture}></View>
+                    </TouchableOpacity>
+                 </Camera>
+               </View>
+               </Content>
+           </Container>
     );
   }
 

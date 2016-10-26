@@ -2,6 +2,7 @@
 
 import React, { Component, PropTypes } from 'react'
 import { View, TouchableHighlight, TouchableOpacity, StyleSheet, Text, PanResponder, TextInput, ListView, Image } from 'react-native';
+import { Container, Header, Title, Content, Footer, FooterTab, Button, Icon } from 'native-base';
 import Welcome from './welcome';
 import superagent from 'superagent';
 import db from '../dbConfig';
@@ -28,6 +29,7 @@ class FindFriends extends Component {
     this.renderPending = this.renderPending.bind(this);
     this.addFriend = this.addFriend.bind(this);
     this.renderFriends = this.renderFriends.bind(this);
+    this.back = this.back.bind(this);
   }
 
   onPress() {
@@ -39,6 +41,10 @@ class FindFriends extends Component {
         navigator: this.props.navigator
       }
     })
+  }
+
+  back() {
+    this.props.navigator.pop(0);
   }
 
   onSearch() {
@@ -90,9 +96,9 @@ class FindFriends extends Component {
     return (
       <View style={{ backgroundColor: '#EEE', height: 80, padding: 5, flexDirection: 'row' }}>
         <Image
-           style={{width: 50, height: 50, borderRadius: 5 }}
-           source={{uri: item.img_url ? item.img_url : 'http://lorempixel.com/200/200' }}
-         />
+          style={{width: 50, height: 50, borderRadius: 10 }}
+          source={{ uri: item.img_url }}
+        />
          <View style={{ padding: 20, width: 150 }}>
             <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
          </View>
@@ -107,9 +113,9 @@ class FindFriends extends Component {
   renderPending(item) {
     return (
       <View style={{ backgroundColor: '#EEE', height: 80, padding: 5, flexDirection: 'row' }}>
-        <Image
-           style={{width: 50, height: 50, borderRadius: 5 }}
-           source={{uri: item.img_url ? item.img_url : 'http://lorempixel.com/200/200' }}
+         <Image
+           style={{width: 50, height: 50, borderRadius: 10 }}
+           source={{ uri: item.img_url }}
          />
          <View style={{ padding: 20, width: 150 }}>
             <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
@@ -146,8 +152,16 @@ class FindFriends extends Component {
 
   render() {
     return (
+      <Container>
+      <Header>
+          <Button onPress={this.back} transparent>
+            <Icon name='ios-arrow-back' />
+          </Button>
+
+          <Title>Find Friends</Title>
+
+      </Header>
       <View style={{ paddingTop: 50 }}>
-        <Text>Find Friends</Text>
         <TextInput
           style={{height: 40, borderColor: 'gray', borderWidth: 1}}
           onChangeText={(text) => this.setState({ text: text })}
@@ -190,6 +204,7 @@ class FindFriends extends Component {
         </View>
 
       </View>
+      </Container>
     )
   }
 }
