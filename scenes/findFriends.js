@@ -23,7 +23,6 @@ class FindFriends extends Component {
       })
     }
 
-    this.onPress = this.onPress.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.renderItem = this.renderItem.bind(this);
     this.renderPending = this.renderPending.bind(this);
@@ -32,16 +31,6 @@ class FindFriends extends Component {
     this.back = this.back.bind(this);
   }
 
-  onPress() {
-    this.props.navigator.push({
-      component: Welcome,
-      title: '',
-      passProps: {
-        user: this.props.user,
-        navigator: this.props.navigator
-      }
-    })
-  }
 
   back() {
     this.props.navigator.pop(0);
@@ -94,7 +83,7 @@ class FindFriends extends Component {
 
   renderFriends(item) {
     return (
-      <View style={{ backgroundColor: '#EEE', height: 80, padding: 5, flexDirection: 'row' }}>
+      <View style={{ backgroundColor: '#EEE', height: 60, padding: 5, flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
         <Image
           style={{width: 50, height: 50, borderRadius: 10 }}
           source={{ uri: item.img_url }}
@@ -103,8 +92,8 @@ class FindFriends extends Component {
             <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
          </View>
 
-         <View style={{ backgroundColor: 'blue', height: 40 }}>
-            <Text style={{ color: 'white' }}>Already friends</Text>
+         <View style={{ backgroundColor: 'blue', height: 40, flex: .25, flexDirection: 'row', alignItems: 'center',  padding: 5 }}>
+            <Text style={{ color: 'white', textAlign: 'center' }}>Already friends</Text>
          </View>
       </View>
     );
@@ -112,7 +101,7 @@ class FindFriends extends Component {
 
   renderPending(item) {
     return (
-      <View style={{ backgroundColor: '#EEE', height: 80, padding: 5, flexDirection: 'row' }}>
+      <View style={{ backgroundColor: '#EEE', height: 60, padding: 5, flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
          <Image
            style={{width: 50, height: 50, borderRadius: 10 }}
            source={{ uri: item.img_url }}
@@ -121,8 +110,8 @@ class FindFriends extends Component {
             <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
          </View>
 
-         <View style={{ backgroundColor: 'blue', height: 40 }}>
-            <Text style={{ color: 'white' }}>Friend Request Pending</Text>
+         <View style={{ backgroundColor: 'blue', height: 40, flex: .25, flexDirection: 'row', alignItems: 'center',  padding: 5  }}>
+            <Text style={{ color: 'white', textAlign: 'center' }}>Friend Request Pending</Text>
          </View>
       </View>
     );
@@ -130,18 +119,18 @@ class FindFriends extends Component {
 
   renderItem(item) {
     return (
-      <View style={{ backgroundColor: '#EEE', height: 80, padding: 5, flexDirection: 'row' }}>
+      <View style={{ backgroundColor: '#EEE', height: 60, padding: 5, flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
         <Image
-           style={{width: 50, height: 50, borderRadius: 5 }}
-           source={{uri: item.img_url }}
-         />
+          style={{width: 50, height: 50, borderRadius: 10 }}
+          source={{ uri: item.img_url }}
+        />
          <View style={{ padding: 20, width: 150 }}>
             <Text style={{ color: 'black' }}>{item.firstName} {item.lastName}</Text>
          </View>
 
-         <View style={{ backgroundColor: 'blue', height: 40 }}>
+         <View style={{ backgroundColor: 'green', height: 40, flex: .25, flexDirection: 'row', alignItems: 'center', padding: 5 }}>
           <TouchableOpacity onPress={this.addFriend.bind(null, item)}>
-            <Text style={{ color: 'white' }}>Add Friend</Text>
+            <Text style={{ color: 'white', textAlign: 'center' }}>Add Friend</Text>
           </TouchableOpacity>
          </View>
       </View>
@@ -170,10 +159,6 @@ class FindFriends extends Component {
 
         <TouchableOpacity onPress={this.onSearch}>
           <Text>Search!</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={this.onPress}>
-          <Text>Back</Text>
         </TouchableOpacity>
 
         <View>
