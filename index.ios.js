@@ -138,7 +138,11 @@ class wishlist extends Component {
           ref='nav'
           initialRoute={{
             component: Login,
-            title: 'Login or Sign Up!'
+            title: 'Login or Sign Up!',
+            passProps: {
+              user: ''
+              // navigator: this.refs.nav
+            }
           }}
           navigationBarHidden={true}
           style={{ 'flex': 1 }}

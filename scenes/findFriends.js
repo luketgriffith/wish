@@ -109,7 +109,7 @@ class FindFriends extends Component {
          </View>
 
          <View style={{ backgroundColor: 'blue', height: 40, flex: .25, flexDirection: 'row', alignItems: 'center',  padding: 5  }}>
-            <Text style={{ color: 'white', textAlign: 'center' }}>Friend Request Pending</Text>
+            <Text style={{ color: 'white', textAlign: 'center' }}>Pending!</Text>
          </View>
       </View>
     );

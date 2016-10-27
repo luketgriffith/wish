@@ -31,23 +31,22 @@ class Login extends Component {
       signUp: false
     }
     this.toggleSignUp = this.toggleSignUp.bind(this);
-    // this.onPress = this.onPress.bind(this);
+    this.onPress = this.onPress.bind(this);
   }
 
   onPress() {
     let navigate = (user) => {
-      console.log('nav...')
-      // this.props.navigator.push({
-      //   component: Home,
-      //   title: '',
-      //   passProps: {
-      //     user: user,
-      //     navigator: this.props.navigator
-      //   },
-      // });
+      console.log('nav...', this.props.navigator)
+      this.props.navigator.push({
+        component: Home,
+        title: '',
+        passProps: {
+          user: user,
+          navigator: this.props.navigator
+        },
+      });
     }
-    // call getValue() to get the values of the form
-    console.log('onPress from login')
+
     var value = this.refs.form.getValue();
     if (value) { // if validation fails, value will be null
       console.log(value); // value here is an instance of Person
@@ -58,8 +57,6 @@ class Login extends Component {
           console.log(errorMessage)
         }
       }).then((data) => {
-        // console.log('the data...', data)
-        //set a cookie or something
         if(data) {
           superagent
             .post(db.url + '/getUser')
@@ -80,6 +77,7 @@ class Login extends Component {
 
 
   toggleSignUp() {
+    console.log('NAVVVVVV', this.props.navigator)
     this.props.navigator.push({
       component: SignUp,
       title: '',

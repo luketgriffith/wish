@@ -1,6 +1,6 @@
 let db = {
-  url: 'http://localhost:3333'
-  // url: 'https://wishlist-griffith.herokuapp.com'
+  url: 'https://wishlist-griffith.herokuapp.com'
+  // url: 'http://localhost:3333'
 }
 
 export default db;
