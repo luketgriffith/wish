@@ -56,7 +56,7 @@ class Home extends Component {
     return (
       <Container>
                <Header>
-                   <Title>Header</Title>
+                   <Title>Logo Go Here</Title>
                </Header>
 
                <Content>
