@@ -10,6 +10,7 @@ import base from '../config';
 import Login from './login';
 import FriendView from './friendView';
 import Requests from './requests';
+import { Actions } from 'react-native-router-flux';
 
 class Friends extends Component {
   constructor(props) {
@@ -22,7 +23,7 @@ class Friends extends Component {
           rowHasChanged: (row1, row2) => row1 !== row2,
       })
     }
-    this.onPress = this.onPress.bind(this);
+
     this.renderItem = this.renderItem.bind(this);
     this.getFriends = this.getFriends.bind(this);
     this.logOut = this.logOut.bind(this);
@@ -31,7 +32,7 @@ class Friends extends Component {
   }
 
   componentWillMount() {
-    this.getFriends();
+    // this.getFriends();
   }
 
   viewReqs() {
@@ -77,16 +78,6 @@ class Friends extends Component {
     })
   }
 
-  onPress() {
-    this.props.navigator.push({
-      component: FindFriends,
-      title: '',
-      passProps: {
-        user: this.props.user,
-        navigator: this.props.navigator
-      }
-    })
-  }
 
   renderItem(item) {
     console.log('founda frind: ', item)
@@ -123,13 +114,13 @@ class Friends extends Component {
     return (
       <Container>
         <Header>
-            <Button onPress={this.onPress} transparent>
+            <Button onPress={() => Actions.findFriends() } transparent>
               Find Friends
             </Button>
 
             <Title>Friends</Title>
 
-            <Button transparent onPress={this.viewReqs}>
+            <Button transparent onPress={() => Actions.requests() }>
                 Requests
             </Button>
         </Header>

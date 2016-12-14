@@ -18,6 +18,7 @@
     "react-native-cookies": "^2.0.0",
     "react-native-gesture-recognizers": "^0.2.3",
     "react-native-image-picker": "^0.22.9",
+    "react-native-router-flux": "^3.37.0",
     "react-native-scrollable-tab-view": "^0.6.0",
     "react-native-simple-gesture": "0.0.2",
     "react-native-swipeout": "git+https://github.com/dancormier/react-native-swipeout.git",

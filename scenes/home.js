@@ -17,9 +17,42 @@ import Camera from 'react-native-camera';
 import { RNS3 } from 'react-native-aws3';
 import s3 from '../db';
 import Confirm from './confirm';
-
+import Login from './login';
+var CookieManager = require('react-native-cookies');
+import { Actions } from 'react-native-router-flux';
+import Utils from './utils';
 
 class Home extends Component {
+  constructor(props) {
+    super(props);
+
+    this.logOut = this.logOut.bind(this);
+  }
+
+  componentWillMount() {
+    CookieManager.getAll((err, res) => {
+      if(!res) {
+        Actions.login({ text: 'wat'});
+      }
+    });
+    console.log(this.props);
+  }
+
+  componentDidMount() {
+    Utils.checkAuth().then((res) => {
+      console.log('res ok...', res)
+    }).catch((err) => {
+      console.log('err', err)
+    });
+  }
+
+  logOut() {
+    base.auth().signOut().catch((err) => {
+
+    }).then(() => {
+      Actions.login();
+    });
+  }
 
   render() {
     console.log('rendering home....', this.props)
@@ -55,26 +88,32 @@ class Home extends Component {
 
     return (
       <Container>
-               <Header>
-                   <Title>Logo Go Here</Title>
-               </Header>
+         <Header>
+             <Title>Logo Go Here</Title>
+             <Button onPress={this.logOut}>
+               <Text>Log Out</Text>
+             </Button>
+         </Header>
 
-               <Content>
-               <View style={styles.container}>
-                 <Camera
-                   captureTarget={Camera.constants.CaptureTarget.disk}
-                   ref={(cam) => {
-                     this.camera = cam;
-                   }}
-                   style={styles.preview}
-                   aspect={Camera.constants.Aspect.fill}>
-                    <TouchableOpacity style={styles.captureDiv} onPress={this.takePicture.bind(this)}>
-                      <View style={styles.capture}></View>
-                    </TouchableOpacity>
-                 </Camera>
-               </View>
-               </Content>
-           </Container>
+         <Content>
+           <View style={styles.container}>
+             <Camera
+               captureTarget={Camera.constants.CaptureTarget.disk}
+               ref={(cam) => {
+                 this.camera = cam;
+               }}
+               style={styles.preview}
+               aspect={Camera.constants.Aspect.fill}>
+                <TouchableOpacity style={styles.captureDiv} onPress={this.takePicture.bind(this)}>
+                  <View style={styles.capture}></View>
+                </TouchableOpacity>
+             </Camera>
+           </View>
+         </Content>
+         <Footer>
+            <Button onPress={() => Actions.friends()}>Friends</Button>
+         </Footer>
+       </Container>
     );
   }
 

@@ -139,7 +139,6 @@ class FindFriends extends Component {
 
 
   render() {
-    console.log(this.state)
     return (
       <Container>
       <Header>

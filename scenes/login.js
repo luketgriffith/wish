@@ -1,5 +1,5 @@
 'use strict';
-
+var CookieManager = require('react-native-cookies');
 import React, { Component, PropTypes } from 'react'
 import { View, TouchableHighlight, StyleSheet, Text, PanResponder, AlertIOS } from 'react-native';
 import SimpleGesture from 'react-native-simple-gesture';
@@ -14,6 +14,7 @@ import styles from './styles';
 import db from '../dbConfig';
 var ScrollableTabView = require('react-native-scrollable-tab-view');
 import superagent from 'superagent';
+import { Actions } from 'react-native-router-flux';
 
 
 var Form = t.form.Form;
@@ -28,74 +29,68 @@ class Login extends Component {
     super(props);
     this.state = {
       auth: false,
-      signUp: false
+      signUp: false,
+      cookieRes: null,
+      cookieErr: null
     }
     this.toggleSignUp = this.toggleSignUp.bind(this);
     this.onPress = this.onPress.bind(this);
   }
 
-  onPress() {
-    let navigate = (user) => {
-      console.log('nav...', this.props.navigator)
-      this.props.navigator.push({
-        component: Home,
-        title: '',
-        passProps: {
-          user: user,
-          navigator: this.props.navigator
-        },
-      });
-    }
+  async onPress() {
+    try {
+      var value = this.refs.form.getValue();
+      if (value) { // if validation fails, value will be null
+        const user = await base.auth().signInWithEmailAndPassword(value.email, value.password);
+        if(user) {
+          console.log('user from FB: ', user)
+          var future = new Date();
+          future.setDate(future.getDate() + 30);
+          CookieManager.set({
+            name: 'wishlist',
+            value: 'wishlist',
+            domain: 'some domain',
+            origin: 'some origin',
+            path: '/',
+            version: '1',
+            expiration: future
+          }, (err, res) => {
+            console.log('cookie set!');
+          });
 
-    var value = this.refs.form.getValue();
-    if (value) { // if validation fails, value will be null
-      console.log(value); // value here is an instance of Person
-      base.auth().signInWithEmailAndPassword(value.email, value.password).catch(function(error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        if(errorMessage){
-          console.log(errorMessage)
+          const userData = await superagent
+          .post(db.url + '/getUser')
+          .send({ email: user.email })
+          .end((err, res) => {
+            if(err) {
+              throw new Error(err);
+            }
+          });
+          if(userData) {
+            console.log('user data: ', userData)
+            Actions.camera({ user: userData.body[0] });
+          }
         }
-      }).then((data) => {
-        if(data) {
-          superagent
-            .post(db.url + '/getUser')
-            .send({ email: data.email })
-            .end((err, res) => {
-              if(err) {
-                console.log(err)
-              } else {
-                console.log('getting user from login...', res.body)
-                let newUser = res.body[0];
-                navigate(newUser)
-              }
-            });
-        }
-      })
+      }
+    } catch(e) {
+      console.log(e)
+      AlertIOS.alert('Error logging in. Sorry!');
     }
   }
 
 
   toggleSignUp() {
-    console.log('NAVVVVVV', this.props.navigator)
-    this.props.navigator.push({
-      component: SignUp,
-      title: '',
-      passProps: {
-        navigator: this.props.navigator
-      }
-    });
+    Actions.signUp();
   }
 
   render() {
-    console.log('login render')
     let options = {
           fields: {
             password: {
               secureTextEntry: true
             }
-      }
-    }
+          }
+        }
 
     return (
       <View style={styles.container}>

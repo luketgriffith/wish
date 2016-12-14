@@ -13,16 +13,9 @@ import superagent from 'superagent';
 var Platform = require('react-native').Platform;
 import { RNS3 } from 'react-native-aws3';
 import s3 from '../db';
+import { Actions } from 'react-native-router-flux';
 import ImagePicker from 'react-native-image-picker';
 
-var Form = t.form.Form;
-
-var User = t.struct({
-  email: t.String,              // a required string
-  password: t.String,
-  firstName: t.String,
-  lastName: t.String
-});
 
 var options = {
   title: 'Profile Picture'
@@ -37,7 +30,8 @@ class SignUp extends Component {
       password: '',
       firstName: '',
       lastName: '',
-      img_url: null
+      img_url: null,
+      img_loading: false
     }
     this.onPress = this.onPress.bind(this);
     this.upload = this.upload.bind(this);
@@ -52,7 +46,9 @@ class SignUp extends Component {
       console.log('Response = ', response);
 
       if (response.didCancel) {
-        console.log('User cancelled image picker');
+        this.setState({
+          img_loading: false
+        })
       }
       else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
@@ -61,18 +57,22 @@ class SignUp extends Component {
         console.log('User tapped custom button: ', response.customButton);
       }
       else {
+        this.setState({
+          img_loading: true
+        });
         // You can display the image using either data...
-        const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
+        let source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
 
         // or a reference to the platform specific asset location
         if (Platform.OS === 'ios') {
-          const source = {uri: response.uri.replace('file://', ''), isStatic: true};
+          source = {uri: response.uri.replace('file://', ''), isStatic: true};
         } else {
-          const source = {uri: response.uri, isStatic: true};
+          source = {uri: response.uri, isStatic: true};
         }
 
         this.setState({
-          img_url: source
+          img_url: source,
+          img_loading: false
         });
       }
     });
@@ -84,20 +84,6 @@ class SignUp extends Component {
       loading: true
     });
 
-    let navigate = (user) => {
-      console.log('nav...', this.props.navigator)
-      console.log('user', user)
-      this.props.navigator.push({
-        component: Home,
-        title: '',
-        passProps: {
-          user: user,
-          navigator: this.props.navigator
-        },
-      });
-    }
-
-    // var value = this.refs.form.getValue();
     base.auth().createUserWithEmailAndPassword(this.state.email.toLowerCase(), this.state.password).catch((error) => {
 
       var errorCode = error.code;
@@ -134,8 +120,6 @@ class SignUp extends Component {
 
           RNS3.put(file, options)
             .then(response => {
-              console.log('response: ', response)
-
               let data = {
                 firstName: this.state.firstName.toLowerCase(),
                 lastName: this.state.lastName.toLowerCase(),
@@ -155,7 +139,7 @@ class SignUp extends Component {
                     });
                   } else {
                     console.log('sign up res...', res.body)
-                    navigate(res.body);
+                    Actions.camera({ user: res.body[0] });
                   }
                 });
             })
@@ -170,18 +154,13 @@ class SignUp extends Component {
 
   render() {
     let image;
+    if(this.state.img_loading) {
+      image= <Spinner />
+    }
     if(this.state.img_url) {
       image = <Image source={this.state.img_url} style={{ height: 200, width: 200 }} />
     } else {
       image = <Text>No Image Selected</Text>
-    }
-
-    let options = {
-          fields: {
-            password: {
-              secureTextEntry: true
-            }
-      }
     }
 
     let view;
@@ -200,7 +179,7 @@ class SignUp extends Component {
 
           <ListItem>
             <InputGroup borderType='underline' >
-              <Input placeholder='password' onChangeText={(t) => this.setState({ password: t })}/>
+              <Input placeholder='password' type="password" onChangeText={(t) => this.setState({ password: t })}/>
             </InputGroup>
           </ListItem>
 
