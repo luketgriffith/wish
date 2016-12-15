@@ -1,5 +1,5 @@
 'use strict';
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import {
   View,
   TouchableHighlight,
@@ -10,19 +10,9 @@ import {
   TouchableOpacity
  } from 'react-native';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Icon } from 'native-base';
-var t = require('tcomb-form-native');
-// import ReadImageData from 'react-native-asset-library-to-base64';
 import base from '../config';
 import Camera from 'react-native-camera';
-import { RNS3 } from 'react-native-aws3';
-import s3 from '../db';
-import Confirm from './confirm';
-import Login from './login';
-var CookieManager = require('react-native-cookies');
 import { Actions } from 'react-native-router-flux';
-import Utils from './utils';
-import superagent from 'superagent';
-import db from '../dbConfig';
 
 class Home extends Component {
   constructor(props) {

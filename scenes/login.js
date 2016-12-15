@@ -1,18 +1,10 @@
 'use strict';
-var CookieManager = require('react-native-cookies');
 import React, { Component, PropTypes } from 'react'
 import { View, TouchableHighlight, StyleSheet, Text, PanResponder, AlertIOS } from 'react-native';
-import SimpleGesture from 'react-native-simple-gesture';
 var t = require('tcomb-form-native');
 import base from '../config';
-import Home from './home';
-import Welcome from './welcome';
-import Friends from './friends';
-import List from './list';
-import SignUp from './signUp';
 import styles from './styles';
 import db from '../dbConfig';
-var ScrollableTabView = require('react-native-scrollable-tab-view');
 import superagent from 'superagent';
 import { Actions } from 'react-native-router-flux';
 
@@ -29,14 +21,12 @@ class Login extends Component {
     super(props);
     this.state = {
       auth: false,
-      signUp: false,
-      cookieRes: null,
-      cookieErr: null
+      signUp: false
     }
     this.toggleSignUp = this.toggleSignUp.bind(this);
     this.onPress = this.onPress.bind(this);
   }
-
+  // TODO: send user data to reducer made with RN-router-flux 
   async onPress() {
     try {
       var value = this.refs.form.getValue();
@@ -46,17 +36,7 @@ class Login extends Component {
           console.log('user from FB: ', user)
           var future = new Date();
           future.setDate(future.getDate() + 30);
-          CookieManager.set({
-            name: 'wishlist',
-            value: 'wishlist',
-            domain: 'some domain',
-            origin: 'some origin',
-            path: '/',
-            version: '1',
-            expiration: future
-          }, (err, res) => {
-            console.log('cookie set!');
-          });
+
 
           const userData = await superagent
           .post(db.url + '/getUser')
