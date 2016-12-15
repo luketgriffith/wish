@@ -32,7 +32,7 @@ class Friends extends Component {
   }
 
   componentWillMount() {
-    // this.getFriends();
+    this.getFriends();
   }
 
   viewReqs() {
@@ -67,15 +67,10 @@ class Friends extends Component {
   }
 
   goToFriend(friend) {
-    this.props.navigator.push({
-      component: FriendView,
-      title: '',
-      passProps: {
-        user: this.props.user,
-        navigator: this.props.navigator,
-        friend: friend
-      }
-    })
+    Actions.friendView({
+      user: this.props.user,
+      friend: friend
+    });
   }
 
 

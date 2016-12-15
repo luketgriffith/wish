@@ -9,6 +9,7 @@ import SingleItem from './singleItem';
 import superagent from 'superagent';
 import db from '../dbConfig';
 import Swipeout from 'react-native-swipeout';
+import { Actions } from 'react-native-router-flux';
 
 class List extends Component {
   constructor(props) {
@@ -26,11 +27,6 @@ class List extends Component {
     this.cancelButton = this.cancelButton.bind(this);
     this.onPress = this.onPress.bind(this);
     this.delete = this.delete.bind(this);
-  }
-
-  static propTypes = {
-    user: PropTypes.object.isRequired,
-    navigator: PropTypes.object.isRequired
   }
 
   fetchItems() {
@@ -67,15 +63,19 @@ class List extends Component {
   }
 
   onPress(item) {
-    this.props.navigator.push({
-      component: SingleItem,
-      title: '',
-      passProps: {
-        user: this.props.user,
-        item: item,
-        navigator: this.props.navigator
-      }
-    })
+    // this.props.navigator.push({
+    //   component: SingleItem,
+    //   title: '',
+    //   passProps: {
+    //     user: this.props.user,
+    //     item: item,
+    //     navigator: this.props.navigator
+    //   }
+    // })
+    Actions.singleItem({
+      user: this.props.user,
+      item: item
+    });
   }
 
   submitItem(text) {

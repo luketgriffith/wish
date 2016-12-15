@@ -21,29 +21,15 @@ import Login from './login';
 var CookieManager = require('react-native-cookies');
 import { Actions } from 'react-native-router-flux';
 import Utils from './utils';
+import superagent from 'superagent';
+import db from '../dbConfig';
 
 class Home extends Component {
   constructor(props) {
     super(props);
 
+    this.state = { user: '' };
     this.logOut = this.logOut.bind(this);
-  }
-
-  componentWillMount() {
-    CookieManager.getAll((err, res) => {
-      if(!res) {
-        Actions.login({ text: 'wat'});
-      }
-    });
-    console.log(this.props);
-  }
-
-  componentDidMount() {
-    Utils.checkAuth().then((res) => {
-      console.log('res ok...', res)
-    }).catch((err) => {
-      console.log('err', err)
-    });
   }
 
   logOut() {
@@ -55,7 +41,6 @@ class Home extends Component {
   }
 
   render() {
-    console.log('rendering home....', this.props)
     const styles = StyleSheet.create({
       container: {
         flex: 1
@@ -112,27 +97,21 @@ class Home extends Component {
          </Content>
          <Footer>
             <Button onPress={() => Actions.friends()}>Friends</Button>
+            <Button onPress={() => Actions.list()}>List</Button>
          </Footer>
        </Container>
     );
   }
 
   takePicture() {
-    // console.log('this.props.user.uid', this.props.user.uid);
-
     this.camera.capture().catch((error) => {
       console.log('errrrrrrrr:', error)
     }).then((data) => {
       console.log('the data we got from camera: ', data);
-      this.props.navigator.push({
-        component: Confirm,
-        title: '',
-        passProps: {
+        Actions.confirm({
           image: data.path,
-          navigator: this.props.navigator,
-          user: this.props.user
-        }
-      })
+          user: this.state.user
+        });
       }).catch((err) => {
         console.log('SHOOOOOOT ERROR: ', err)
       })

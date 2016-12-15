@@ -21,6 +21,7 @@ import Welcome from './welcome';
 import Home from './home';
 import superagent from 'superagent';
 import db from '../dbConfig';
+import { Actions } from 'react-native-router-flux';
 
 class Confirm extends Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class Confirm extends Component {
   }
 
   cancel() {
-    this.props.navigator.pop(0)
+    Actions.pop();
   }
 
   confirm() {
@@ -67,7 +68,7 @@ class Confirm extends Component {
               if(err) {
                 console.log(err);
               } else {
-                this.props.navigator.pop(0);
+                Actions.list({ user: this.props.user });
               }
             })
         })
